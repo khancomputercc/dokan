@@ -472,7 +472,7 @@
         // ডিফল্ট লোগো বেস64 (একটি সাধারণ লোগো)
         const DEFAULT_LOGO = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBkPSJNMjAgM0wxIDExdjE4bDE5IDggMTktOFYxMWwtMTktOHoiIGZpbGw9IiMyYzNlNTAiLz48cGF0aCBkPSJNMjAgM2wxOSA4djE4bC0xOSA4VjN6IiBmaWxsPSIjMzQ5OGRiIi8+PHRleHQgeD0iMjAiIHk9IjI4IiBmb250LWZhbWlseT0iU29sYWltYW5MaXBpIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+a2hhbjwvdGV4dD48L3N2Zz4=';
         
-        // এই কোডটি JavaScript শুরুতেই যোগ করুন (Database ক্লাসের আগে)
+        // সংখ্যা ফরম্যাট করার জন্য হেল্পার ফাংশন
         Number.prototype.toBanglaInteger = function() {
             return Math.floor(this).toString();
         };
@@ -1657,7 +1657,7 @@
                 return report;
             }
             
-            // সরবরাহকারীর ক্রয় রিপোর্ট (গ্রাহক রিপোর্টের মতো করে তৈরি)
+            // সরবরাহকারীর ক্রয় রিপোর্ট
             getSupplierPurchaseReport(supplierId, startDate = null, endDate = null) {
                 const transactions = this.getTransactions();
                 
@@ -2156,13 +2156,7 @@
                                         <h4 class="text-center mb-0">${storeName}</h4>
                                     </div>
                                     
-                                    <div class="text-center mb-4">
-                                        <div class="bg-light rounded-circle d-inline-block p-3">
-                                            <i class="fas fa-user-circle fa-3x text-primary"></i>
-                                        </div>
-                                        <h5 class="mt-2 mb-1">${this.currentUser.name}</h5>
-                                        <span class="badge ${this.currentUser.role === 'admin' ? 'bg-danger' : 'bg-secondary'}">${this.currentUser.role === 'admin' ? 'অ্যাডমিন' : 'স্টাফ'}</span>
-                                    </div>
+                                   
                                 </div>
                                 
                                 <nav class="nav flex-column">
@@ -2567,16 +2561,16 @@
                         </div>
                     </div>
                     
-                    <!-- পেমেন্ট মোডাল -->
-                    <div class="modal fade" id="paymentModal" tabindex="-1">
+                    <!-- গ্রাহক পেমেন্ট মোডাল (অ্যাডভান্স) -->
+                    <div class="modal fade" id="customerPaymentModal" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">জমা/অ্যাডভান্স আদায়</h5>
+                                    <h5 class="modal-title">গ্রাহক জমা/অ্যাডভান্স</h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form id="paymentForm">
+                                    <form id="customerPaymentForm">
                                         <input type="hidden" id="paymentCustomerId">
                                         <div class="mb-3">
                                             <label for="customerNameDisplay" class="form-label">গ্রাহক</label>
@@ -2612,114 +2606,12 @@
                         </div>
                     </div>
                     
-                    <!-- ইউজার মোডাল -->
-                    <div class="modal fade" id="userModal" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="userModalTitle">নতুন ব্যবহারকারী যোগ করুন</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="userForm">
-                                        <input type="hidden" id="userId">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label for="userName" class="form-label">নাম *</label>
-                                                <input type="text" class="form-control" id="userName" required>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label for="userUsername" class="form-label">ইউজারনেম *</label>
-                                                <input type="text" class="form-control" id="userUsername" required>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label for="userPassword" class="form-label">পাসওয়ার্ড *</label>
-                                                <input type="password" class="form-control" id="userPassword">
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label for="userRole" class="form-label">ভূমিকা *</label>
-                                                <select class="form-control" id="userRole" required>
-                                                    <option value="staff">স্টাফ</option>
-                                                    <option value="admin">অ্যাডমিন</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <small class="text-muted">পাসওয়ার্ড খালি রাখলে পূর্বের পাসওয়ার্ড অপরিবর্তিত থাকবে</small>
-                                        </div>
-                                        <div class="d-grid gap-2">
-                                            <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- কনফার্মেশন মোডাল -->
-                    <div class="modal fade" id="confirmationModal" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="confirmationModalTitle">নিশ্চিতকরণ</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body" id="confirmationModalBody">
-                                    আপনি কি নিশ্চিত?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
-                                    <button type="button" class="btn btn-danger" id="confirmActionBtn">নিশ্চিত করুন</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- স্টক ইন/আউট মোডাল -->
-                    <div class="modal fade" id="stockAdjustModal" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="stockAdjustModalTitle">স্টক সমন্বয়</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="stockAdjustForm">
-                                        <input type="hidden" id="adjustProductId">
-                                        <input type="hidden" id="adjustType">
-                                        <div class="mb-3">
-                                            <label for="adjustProductName" class="form-label">পণ্য</label>
-                                            <input type="text" class="form-control" id="adjustProductName" readonly>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="adjustQuantity" class="form-label">পরিমাণ *</label>
-                                            <input type="number" class="form-control" id="adjustQuantity" step="0.001" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="adjustPrice" class="form-label">দাম *</label>
-                                            <input type="number" class="form-control" id="adjustPrice" step="0.01" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="adjustNotes" class="form-label">মন্তব্য</label>
-                                            <textarea class="form-control" id="adjustNotes" rows="2"></textarea>
-                                        </div>
-                                        <div class="d-grid gap-2">
-                                            <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <!-- সরবরাহকারী পেমেন্ট মোডাল -->
                     <div class="modal fade" id="supplierPaymentModal" tabindex="-1">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">সরবরাহকারী পেমেন্ট রেকর্ড</h5>
+                                    <h5 class="modal-title">সরবরাহকারী পেমেন্ট</h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body">
@@ -3360,7 +3252,7 @@
                                                                 <i class="fas fa-shopping-cart"></i>
                                                             </button>
                                                             <button class="btn btn-sm btn-warning collect-advance" data-id="${customer.id}" data-name="${customer.name}" data-advance="${customer.total_advance}">
-                                                                <i class="fas fa-hand-holding-usd"></i>
+                                                                <i class="fas fa-hand-holding-usd"></i> জমা
                                                             </button>
                                                             <button class="btn btn-sm btn-success print-report-btn print-customer-report" data-id="${customer.id}" data-name="${customer.name}">
                                                                 <i class="fas fa-print"></i>
@@ -3393,6 +3285,9 @@
                             <div>
                                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#supplierModal">
                                     <i class="fas fa-truck"></i> নতুন সরবরাহকারী
+                                </button>
+                                <button class="btn btn-info ms-2" data-bs-toggle="modal" data-bs-target="#supplierPaymentModal">
+                                    <i class="fas fa-hand-holding-usd"></i> পেমেন্ট দিন
                                 </button>
                             </div>
                         </div>
@@ -3441,23 +3336,32 @@
                                                     '<span class="text-muted">N/A</span>'}
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-between align-items-center mt-3">
-                                            <div>
+                                        <div class="row mt-3">
+                                            <div class="col-6">
                                                 <small class="text-muted">শেষ সরবরাহ:</small>
                                                 <p class="mb-0">${supplier.last_supply ? new Date(supplier.last_supply).toLocaleDateString('bn-BD') : 'N/A'}</p>
                                             </div>
-                                            <div class="action-buttons">
-                                                <button class="btn btn-sm btn-primary edit-supplier" data-id="${supplier.id}">
+                                            <div class="col-6 text-end">
+                                                <small class="text-muted">বাকি:</small>
+                                                <p class="mb-0 ${supplier.balance > 0 ? 'text-danger fw-bold' : 'text-success'}">${supplier.balance.toFixed(2)} টাকা</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-sm btn-primary edit-supplier" data-id="${supplier.id}" title="সম্পাদনা">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-info view-supplier-transactions" data-id="${supplier.id}" data-name="${supplier.name}">
+                                                <button class="btn btn-sm btn-info view-supplier-transactions" data-id="${supplier.id}" data-name="${supplier.name}" title="লেনদেন দেখুন">
                                                     <i class="fas fa-list"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-success print-report-btn print-supplier-report" data-id="${supplier.id}" data-name="${supplier.name}">
+                                                <button class="btn btn-sm btn-success pay-supplier" data-id="${supplier.id}" data-name="${supplier.name}" title="পেমেন্ট দিন">
+                                                    <i class="fas fa-hand-holding-usd"></i> পেমেন্ট
+                                                </button>
+                                                <button class="btn btn-sm btn-secondary print-supplier-report" data-id="${supplier.id}" data-name="${supplier.name}" title="রিপোর্ট প্রিন্ট">
                                                     <i class="fas fa-print"></i>
                                                 </button>
                                                 ${this.currentUser.role === 'admin' ? `
-                                                <button class="btn btn-sm btn-danger delete-supplier" data-id="${supplier.id}">
+                                                <button class="btn btn-sm btn-danger delete-supplier" data-id="${supplier.id}" title="মুছুন">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                                 ` : ''}
@@ -3760,9 +3664,20 @@
                 `;
             }
             
+            // 🔴 আপডেটেড renderSalesView ফাংশন - নতুন সারাংশ কার্ড সহ
             renderSalesView() {
                 const sales = this.db.getSales();
                 const customers = this.db.getCustomers();
+                
+                // আজকের তারিখ এবং ৭ দিন আগের তারিখ
+                const today = new Date().toISOString().split('T')[0];
+                const sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split('T')[0];
+                
+                // ফিল্টার করা বিক্রয় (প্রাথমিকভাবে শেষ ৭ দিন)
+                const filteredSales = this.getFilteredSales(sevenDaysAgo, today, '');
+                
+                // সারাংশ হিসাব
+                const summary = this.calculateSalesSummary(filteredSales);
                 
                 return `
                     <div class="sales-content">
@@ -3775,17 +3690,63 @@
                             </div>
                         </div>
                         
+                        <!-- 🔴 নতুন সারাংশ কার্ড - ফিল্টারের উপরে -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="card-title mb-1">মোট নগদ বিক্রয়</h6>
+                                                <h3 class="mb-0" id="totalCashSales">${summary.totalCash.toFixed(2)}</h3>
+                                            </div>
+                                            <i class="fas fa-money-bill-wave fa-3x opacity-50"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="card-title mb-1">মোট বাকি বিক্রয়</h6>
+                                                <h3 class="mb-0" id="totalCreditSales">${summary.totalCredit.toFixed(2)}</h3>
+                                            </div>
+                                            <i class="fas fa-file-invoice-dollar fa-3x opacity-50"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="card-title mb-1">মোট প্রফিট (প্রত্যাশিত)</h6>
+                                                <h3 class="mb-0" id="totalProfit">${summary.totalProfit.toFixed(2)}</h3>
+                                            </div>
+                                            <i class="fas fa-chart-line fa-3x opacity-50"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- ফিল্টার -->
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-3 mb-2">
-                                        <input type="date" class="form-control" id="salesDateFrom" value="${new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split('T')[0]}">
+                                        <label for="salesDateFrom" class="form-label">শুরুর তারিখ</label>
+                                        <input type="date" class="form-control" id="salesDateFrom" value="${sevenDaysAgo}">
                                     </div>
                                     <div class="col-md-3 mb-2">
-                                        <input type="date" class="form-control" id="salesDateTo" value="${new Date().toISOString().split('T')[0]}">
+                                        <label for="salesDateTo" class="form-label">শেষের তারিখ</label>
+                                        <input type="date" class="form-control" id="salesDateTo" value="${today}">
                                     </div>
                                     <div class="col-md-3 mb-2">
+                                        <label for="filterCustomer" class="form-label">গ্রাহক</label>
                                         <select class="form-control" id="filterCustomer">
                                             <option value="">সব গ্রাহক</option>
                                             ${customers.map(customer => 
@@ -3793,7 +3754,7 @@
                                             ).join('')}
                                         </select>
                                     </div>
-                                    <div class="col-md-3 mb-2">
+                                    <div class="col-md-3 mb-2 d-flex align-items-end">
                                         <button class="btn btn-primary w-100" id="filterSalesBtn">
                                             <i class="fas fa-filter"></i> ফিল্টার করুন
                                         </button>
@@ -3822,7 +3783,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="salesTableBody">
-                                            ${sales.map(sale => {
+                                            ${filteredSales.map(sale => {
                                                 const totalItems = sale.items.reduce((sum, item) => sum + item.quantity, 0);
                                                 let paymentStatusClass = 'payment-paid';
                                                 let paymentStatusText = 'পরিশোধিত';
@@ -4084,6 +4045,11 @@
                     <div class="customer-supplier-report">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h2>গ্রাহক ও সরবরাহকারী রিপোর্ট</h2>
+                            <div>
+                                <button class="btn btn-info me-2" data-bs-toggle="modal" data-bs-target="#supplierPaymentModal">
+                                    <i class="fas fa-hand-holding-usd"></i> সরবরাহকারী পেমেন্ট
+                                </button>
+                            </div>
                         </div>
                         
                         <!-- তারিখ ফিল্টার -->
@@ -4217,9 +4183,9 @@
                                                                 <td>${customer.last_purchase ? new Date(customer.last_purchase).toLocaleDateString('bn-BD') : 'N/A'}</td>
                                                                 <td>
                                                                     <button class="btn btn-sm btn-info view-customer-details" data-id="${customer.id}">
-                                                                        <i class="fas fa-chart-bar"></i> বিস্তারিত
+                                                                        <i class="fas fa-chart-bar"></i>
                                                                     </button>
-                                                                    <button class="btn btn-sm btn-success print-report-btn print-customer-report" data-id="${customer.id}" data-name="${customer.name}">
+                                                                    <button class="btn btn-sm btn-success print-customer-report" data-id="${customer.id}" data-name="${customer.name}">
                                                                         <i class="fas fa-print"></i>
                                                                     </button>
                                                                 </td>
@@ -4233,7 +4199,7 @@
                                 </div>
                             </div>
                             
-                            <!-- সরবরাহকারী রিপোর্ট ট্যাব (গ্রাহক রিপোর্টের মতো করে তৈরি) -->
+                            <!-- সরবরাহকারী রিপোর্ট ট্যাব -->
                             <div class="tab-pane fade" id="supplier-report" role="tabpanel">
                                 <div class="card">
                                     <div class="card-header">
@@ -4298,9 +4264,9 @@
                                                                 <td>${report.total_purchases}</td>
                                                                 <td>
                                                                     <button class="btn btn-sm btn-info view-supplier-details" data-id="${supplier.id}">
-                                                                        <i class="fas fa-chart-bar"></i> বিস্তারিত
+                                                                        <i class="fas fa-chart-bar"></i>
                                                                     </button>
-                                                                    <button class="btn btn-sm btn-success print-report-btn print-supplier-report" data-id="${supplier.id}" data-name="${supplier.name}">
+                                                                    <button class="btn btn-sm btn-success print-supplier-report" data-id="${supplier.id}" data-name="${supplier.name}">
                                                                         <i class="fas fa-print"></i>
                                                                     </button>
                                                                 </td>
@@ -4560,6 +4526,61 @@
                 `;
             }
             
+            // 🔴 নতুন হেল্পার ফাংশন ১: ফিল্টার করা বিক্রয় পাওয়ার জন্য
+            getFilteredSales(dateFrom, dateTo, customerId) {
+                const sales = this.db.getSales();
+                
+                return sales.filter(sale => {
+                    const saleDate = sale.sale_date.split('T')[0];
+                    const matchesDate = (!dateFrom || saleDate >= dateFrom) && (!dateTo || saleDate <= dateTo);
+                    const matchesCustomer = !customerId || sale.customer_id === parseInt(customerId);
+                    
+                    return matchesDate && matchesCustomer;
+                });
+            }
+            
+            // 🔴 নতুন হেল্পার ফাংশন ২: সারাংশ হিসাব করার জন্য
+            calculateSalesSummary(sales) {
+                let totalCash = 0;
+                let totalCredit = 0;
+                let totalProfit = 0;
+                
+                sales.forEach(sale => {
+                    const isCash = sale.payment_method === 'নগদ' || 
+                                  sale.payment_method === 'মোবাইল ব্যাংকিং' || 
+                                  sale.payment_method === 'কার্ড';
+                    
+                    if (isCash) {
+                        totalCash += sale.total_amount;
+                    } else {
+                        totalCredit += sale.total_amount;
+                    }
+                    
+                    // 20% প্রফিট ধরে (আপনি পরিবর্তন করতে পারেন)
+                    totalProfit += sale.total_amount * 0.20;
+                });
+                
+                return { totalCash, totalCredit, totalProfit };
+            }
+            
+            // 🔴 নতুন হেল্পার ফাংশন ৩: সারাংশ আপডেট করার জন্য
+            updateSalesSummary() {
+                const dateFrom = document.getElementById('salesDateFrom')?.value || '';
+                const dateTo = document.getElementById('salesDateTo')?.value || '';
+                const customerId = document.getElementById('filterCustomer')?.value || '';
+                
+                const filteredSales = this.getFilteredSales(dateFrom, dateTo, customerId);
+                const summary = this.calculateSalesSummary(filteredSales);
+                
+                const totalCashElement = document.getElementById('totalCashSales');
+                const totalCreditElement = document.getElementById('totalCreditSales');
+                const totalProfitElement = document.getElementById('totalProfit');
+                
+                if (totalCashElement) totalCashElement.textContent = summary.totalCash.toFixed(2);
+                if (totalCreditElement) totalCreditElement.textContent = summary.totalCredit.toFixed(2);
+                if (totalProfitElement) totalProfitElement.textContent = summary.totalProfit.toFixed(2);
+            }
+            
             // Setup methods
             setupEventListeners() {
                 document.addEventListener('click', (e) => {
@@ -4609,7 +4630,8 @@
                         { class: 'collect-advance', method: 'collectAdvance' },
                         { class: 'print-invoice', method: 'printInvoice' },
                         { class: 'print-customer-report', method: 'printCustomerReport' },
-                        { class: 'print-supplier-report', method: 'printSupplierReport' }
+                        { class: 'print-supplier-report', method: 'printSupplierReport' },
+                        { class: 'pay-supplier', method: 'openSupplierPaymentModal' }
                     ];
                     
                     actions.forEach(action => {
@@ -4627,6 +4649,8 @@
                             } else if (action.method === 'viewCustomerSales' || action.method === 'viewSupplierTransactions') {
                                 this[action.method](id, name);
                             } else if (action.method === 'printCustomerReport' || action.method === 'printSupplierReport') {
+                                this[action.method](id, name);
+                            } else if (action.method === 'openSupplierPaymentModal') {
                                 this[action.method](id, name);
                             } else {
                                 this[action.method](parseInt(id));
@@ -4807,12 +4831,12 @@
                     }
                 }
                 
-                // পেমেন্ট ফর্ম
-                const paymentForm = document.getElementById('paymentForm');
-                if (paymentForm) {
-                    paymentForm.addEventListener('submit', (e) => {
+                // গ্রাহক পেমেন্ট ফর্ম
+                const customerPaymentForm = document.getElementById('customerPaymentForm');
+                if (customerPaymentForm) {
+                    customerPaymentForm.addEventListener('submit', (e) => {
                         e.preventDefault();
-                        this.handlePaymentSubmit();
+                        this.handleCustomerPaymentSubmit();
                     });
                 }
                 
@@ -4854,14 +4878,44 @@
                     filterTransactionsBtn.addEventListener('click', () => this.filterTransactions());
                 }
                 
+                // 🔴 আপডেটেড ফিল্টার বাটন ইভেন্ট
                 const filterSalesBtn = document.getElementById('filterSalesBtn');
                 if (filterSalesBtn) {
-                    filterSalesBtn.addEventListener('click', () => this.filterSales());
+                    filterSalesBtn.addEventListener('click', () => {
+                        this.filterSales(); // টেবিল আপডেট
+                        this.updateSalesSummary(); // সারাংশ আপডেট
+                    });
                 }
                 
                 const searchSupplier = document.getElementById('searchSupplier');
                 if (searchSupplier) {
                     searchSupplier.addEventListener('input', () => this.filterSuppliers());
+                }
+                
+                // 🔴 ডেট ইনপুট পরিবর্তন হলে অটো ফিল্টার (ঐচ্ছিক)
+                const salesDateFrom = document.getElementById('salesDateFrom');
+                const salesDateTo = document.getElementById('salesDateTo');
+                const filterCustomer = document.getElementById('filterCustomer');
+                
+                if (salesDateFrom) {
+                    salesDateFrom.addEventListener('change', () => {
+                        this.filterSales();
+                        this.updateSalesSummary();
+                    });
+                }
+                
+                if (salesDateTo) {
+                    salesDateTo.addEventListener('change', () => {
+                        this.filterSales();
+                        this.updateSalesSummary();
+                    });
+                }
+                
+                if (filterCustomer) {
+                    filterCustomer.addEventListener('change', () => {
+                        this.filterSales();
+                        this.updateSalesSummary();
+                    });
                 }
                 
                 // তারিখ ফিল্টার প্রয়োগ
@@ -5040,11 +5094,11 @@
                     });
                 }
                 
-                // পেমেন্ট মোডাল রিসেট
-                const paymentModal = document.getElementById('paymentModal');
-                if (paymentModal) {
-                    paymentModal.addEventListener('hidden.bs.modal', () => {
-                        document.getElementById('paymentForm').reset();
+                // গ্রাহক পেমেন্ট মোডাল রিসেট
+                const customerPaymentModal = document.getElementById('customerPaymentModal');
+                if (customerPaymentModal) {
+                    customerPaymentModal.addEventListener('hidden.bs.modal', () => {
+                        document.getElementById('customerPaymentForm').reset();
                         document.getElementById('paymentCustomerId').value = '';
                     });
                 }
@@ -5349,7 +5403,7 @@
                 this.navigateTo('users');
             }
             
-            handlePaymentSubmit() {
+            handleCustomerPaymentSubmit() {
                 const customerId = parseInt(document.getElementById('paymentCustomerId').value);
                 const amount = parseFloat(document.getElementById('paymentAmount').value);
                 const paymentMethod = document.getElementById('paymentMethod').value;
@@ -5365,7 +5419,7 @@
                     customer.total_advance = (customer.total_advance || 0) + amount;
                     this.db.updateCustomer(customerId, customer);
                     
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('customerPaymentModal'));
                     modal.hide();
                     
                     this.showAlert(`${amount.toFixed(2)} টাকা জমা গ্রহণ করা হয়েছে`, 'success');
@@ -5429,6 +5483,8 @@
                 // রিফ্রেশ
                 if (this.currentView === 'customer-supplier-report') {
                     this.navigateTo('customer-supplier-report');
+                } else if (this.currentView === 'suppliers') {
+                    this.navigateTo('suppliers');
                 }
             }
             
@@ -5474,6 +5530,12 @@
                 };
                 
                 const sale = this.db.addSale(saleData);
+                
+                // গ্রাহকের অ্যাডভান্স থেকে টাকা কেটে নিন (যদি ব্যবহার করা হয়)
+                if (customer && customerAdvance > 0) {
+                    customer.total_advance = Math.max(0, customer.total_advance - additionalAdvance);
+                    this.db.updateCustomer(customer.id, customer);
+                }
                 
                 // বিক্রয় সাফ করুন
                 this.saleItems = [];
@@ -6013,13 +6075,38 @@
                                 box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
                             }
                             .header { 
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
                                 border-bottom: 2px solid #2c3e50; 
                                 padding-bottom: 20px; 
                                 margin-bottom: 30px; 
                             }
+                            .logo-section {
+                                display: flex;
+                                align-items: center;
+                                gap: 15px;
+                            }
                             .store-logo {
-                                max-height: 80px;
-                                margin-bottom: 10px;
+                                width: 80px;
+                                height: 80px;
+                                border-radius: 10px;
+                                object-fit: cover;
+                            }
+                            .store-info {
+                                text-align: left;
+                            }
+                            .store-info h3 {
+                                margin: 0 0 5px 0;
+                                color: #2c3e50;
+                            }
+                            .store-info p {
+                                margin: 3px 0;
+                                color: #666;
+                                font-size: 14px;
+                            }
+                            .invoice-info {
+                                text-align: right;
                             }
                             .invoice-number { 
                                 background: #2c3e50; 
@@ -6028,6 +6115,7 @@
                                 border-radius: 5px; 
                                 display: inline-block; 
                                 font-weight: bold; 
+                                margin-bottom: 10px;
                             }
                             table { 
                                 width: 100%; 
@@ -6042,6 +6130,48 @@
                             th { 
                                 background-color: #f1f5f9; 
                             }
+                            .customer-info-section {
+                                display: flex;
+                                justify-content: space-between;
+                                margin-bottom: 30px;
+                                background: #f8f9fa;
+                                padding: 15px;
+                                border-radius: 5px;
+                            }
+                            .customer-info, .payment-info {
+                                flex: 1;
+                            }
+                            .customer-info h4, .payment-info h4 {
+                                margin: 0 0 10px 0;
+                                color: #2c3e50;
+                                border-bottom: 1px solid #dee2e6;
+                                padding-bottom: 5px;
+                            }
+                            .customer-info p, .payment-info p {
+                                margin: 5px 0;
+                            }
+                            .total-section {
+                                display: flex;
+                                justify-content: flex-end;
+                                margin-top: 20px;
+                            }
+                            .total-box {
+                                width: 300px;
+                                background: #f8f9fa;
+                                padding: 15px;
+                                border-radius: 5px;
+                            }
+                            .total-row {
+                                display: flex;
+                                justify-content: space-between;
+                                margin-bottom: 10px;
+                            }
+                            .total-row.final {
+                                font-weight: bold;
+                                border-top: 2px solid #2c3e50;
+                                padding-top: 10px;
+                                margin-top: 10px;
+                            }
                             .footer { 
                                 border-top: 2px solid #2c3e50; 
                                 padding-top: 20px; 
@@ -6049,6 +6179,13 @@
                                 text-align: center; 
                                 font-style: italic; 
                                 color: #666; 
+                            }
+                            .notes-section {
+                                margin-top: 20px;
+                                padding: 10px;
+                                background: #fff3cd;
+                                border-left: 4px solid #ffc107;
+                                border-radius: 3px;
                             }
                             @media print {
                                 body { padding: 0; }
@@ -6059,38 +6196,36 @@
                     <body>
                         <div class="invoice-container">
                             <div class="header">
-                                <div style="text-align: center; margin-bottom: 20px;">
+                                <div class="logo-section">
                                     <img src="${storeLogo}" alt="${storeName}" class="store-logo">
-                                </div>
-                                <div class="row" style="display: flex; justify-content: space-between;">
-                                    <div>
+                                    <div class="store-info">
                                         <h3>${storeName}</h3>
-                                        <p style="margin: 5px 0;">${storeAddress}</p>
-                                        <p style="margin: 5px 0;">ফোন: ${storePhone}</p>
+                                        <p>${storeAddress}</p>
+                                        <p>ফোন: ${storePhone}</p>
                                     </div>
-                                    <div style="text-align: right;">
-                                        <div class="invoice-number" style="margin-bottom: 10px;">
-                                            ইনভয়েস: ${sale.invoice_no}
-                                        </div>
-                                        <p style="margin: 5px 0;">তারিখ: ${new Date(sale.sale_date).toLocaleString('bn-BD')}</p>
-                                        <p style="margin: 5px 0;">বিক্রেতা: ${sellerName}</p>
+                                </div>
+                                <div class="invoice-info">
+                                    <div class="invoice-number">
+                                        ইনভয়েস: ${sale.invoice_no}
                                     </div>
+                                    <p>তারিখ: ${new Date(sale.sale_date).toLocaleString('bn-BD')}</p>
+                                    <p>বিক্রেতা: ${sellerName}</p>
                                 </div>
                             </div>
                             
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-                                <div>
+                            <div class="customer-info-section">
+                                <div class="customer-info">
                                     <h4>গ্রাহকের তথ্য</h4>
-                                    <p style="margin: 5px 0;"><strong>নাম:</strong> ${sale.customer_name}</p>
+                                    <p><strong>নাম:</strong> ${sale.customer_name}</p>
                                     ${customer ? `
-                                        <p style="margin: 5px 0;"><strong>মোবাইল:</strong> ${customer.phone || 'N/A'}</p>
-                                        <p style="margin: 5px 0;"><strong>ঠিকানা:</strong> ${customer.address || 'N/A'}</p>
+                                        <p><strong>মোবাইল:</strong> ${customer.phone || 'N/A'}</p>
+                                        <p><strong>ঠিকানা:</strong> ${customer.address || 'N/A'}</p>
                                     ` : ''}
                                 </div>
-                                <div style="text-align: right;">
+                                <div class="payment-info">
                                     <h4>পেমেন্ট তথ্য</h4>
-                                    <p style="margin: 5px 0;"><strong>পেমেন্ট পদ্ধতি:</strong> ${sale.payment_method}</p>
-                                    <p style="margin: 5px 0;"><strong>স্ট্যাটাস:</strong> ${sale.payment_status}</p>
+                                    <p><strong>পদ্ধতি:</strong> ${sale.payment_method}</p>
+                                    <p><strong>স্ট্যাটাস:</strong> ${sale.payment_status}</p>
                                 </div>
                             </div>
                             
@@ -6109,18 +6244,17 @@
                                 </tbody>
                             </table>
                             
-                            <div style="display: flex; justify-content: flex-end;">
-                                <div style="width: 300px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <div class="total-section">
+                                <div class="total-box">
+                                    <div class="total-row">
                                         <span>সর্বমোট:</span>
                                         <span>${sale.total_amount.toFixed(2)} টাকা</span>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <div class="total-row">
                                         <span>জমা:</span>
                                         <span>${sale.advance_paid ? sale.advance_paid.toFixed(2) + ' টাকা' : '০.০০ টাকা'}</span>
                                     </div>
-                                    <hr>
-                                    <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                                    <div class="total-row final">
                                         <span>বাকি:</span>
                                         <span>${sale.due_amount ? sale.due_amount.toFixed(2) + ' টাকা' : '০.০০ টাকা'}</span>
                                     </div>
@@ -6128,9 +6262,8 @@
                             </div>
                             
                             ${sale.notes ? `
-                            <div style="margin-top: 30px;">
-                                <h4>মন্তব্য:</h4>
-                                <p>${sale.notes}</p>
+                            <div class="notes-section">
+                                <strong>মন্তব্য:</strong> ${sale.notes}
                             </div>
                             ` : ''}
                             
@@ -6263,8 +6396,29 @@
                 document.getElementById('customerNameDisplay').value = customerName;
                 document.getElementById('currentAdvance').value = currentAdvance + ' টাকা';
                 
-                const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+                const modal = new bootstrap.Modal(document.getElementById('customerPaymentModal'));
                 modal.show();
+            }
+            
+            // সরবরাহকারী পেমেন্ট মোডাল খোলার ফাংশন
+            openSupplierPaymentModal(supplierId, supplierName) {
+                // পেমেন্ট মোডালের ভিতরে সরবরাহকারী সিলেক্ট করুন
+                const supplierSelect = document.getElementById('paymentSupplier');
+                if (supplierSelect) {
+                    supplierSelect.value = supplierId;
+                }
+                
+                // পেমেন্ট টাইপ সেট করুন
+                const paymentType = document.getElementById('paymentType');
+                if (paymentType) {
+                    paymentType.value = 'payment';
+                }
+                
+                // মোডাল দেখান
+                const modal = new bootstrap.Modal(document.getElementById('supplierPaymentModal'));
+                modal.show();
+                
+                this.showAlert(`${supplierName} - এর জন্য পেমেন্ট ফর্ম খোলা হয়েছে`, 'info');
             }
             
             // ফিল্টার মেথডস
@@ -6307,23 +6461,32 @@
                                             '<span class="text-muted">N/A</span>'}
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <div>
+                                <div class="row mt-3">
+                                    <div class="col-6">
                                         <small class="text-muted">শেষ সরবরাহ:</small>
                                         <p class="mb-0">${supplier.last_supply ? new Date(supplier.last_supply).toLocaleDateString('bn-BD') : 'N/A'}</p>
                                     </div>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-sm btn-primary edit-supplier" data-id="${supplier.id}">
+                                    <div class="col-6 text-end">
+                                        <small class="text-muted">বাকি:</small>
+                                        <p class="mb-0 ${supplier.balance > 0 ? 'text-danger fw-bold' : 'text-success'}">${supplier.balance.toFixed(2)} টাকা</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-primary edit-supplier" data-id="${supplier.id}" title="সম্পাদনা">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-info view-supplier-transactions" data-id="${supplier.id}" data-name="${supplier.name}">
+                                        <button class="btn btn-sm btn-info view-supplier-transactions" data-id="${supplier.id}" data-name="${supplier.name}" title="লেনদেন দেখুন">
                                             <i class="fas fa-list"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-success print-report-btn print-supplier-report" data-id="${supplier.id}" data-name="${supplier.name}">
+                                        <button class="btn btn-sm btn-success pay-supplier" data-id="${supplier.id}" data-name="${supplier.name}" title="পেমেন্ট দিন">
+                                            <i class="fas fa-hand-holding-usd"></i> পেমেন্ট
+                                        </button>
+                                        <button class="btn btn-sm btn-secondary print-supplier-report" data-id="${supplier.id}" data-name="${supplier.name}" title="রিপোর্ট প্রিন্ট">
                                             <i class="fas fa-print"></i>
                                         </button>
                                         ${this.currentUser.role === 'admin' ? `
-                                        <button class="btn btn-sm btn-danger delete-supplier" data-id="${supplier.id}">
+                                        <button class="btn btn-sm btn-danger delete-supplier" data-id="${supplier.id}" title="মুছুন">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                         ` : ''}
@@ -6387,19 +6550,13 @@
                 }
             }
             
+            // 🔴 আপডেটেড filterSales ফাংশন - একই থাকবে, শুধু নিশ্চিত করুন এটি সঠিকভাবে কাজ করে
             filterSales() {
                 const dateFrom = document.getElementById('salesDateFrom')?.value || '';
                 const dateTo = document.getElementById('salesDateTo')?.value || '';
                 const customerFilter = document.getElementById('filterCustomer')?.value || '';
                 
-                const sales = this.db.getSales();
-                const filteredSales = sales.filter(sale => {
-                    const saleDate = sale.sale_date.split('T')[0];
-                    const matchesDate = (!dateFrom || saleDate >= dateFrom) && (!dateTo || saleDate <= dateTo);
-                    const matchesCustomer = !customerFilter || sale.customer_id === parseInt(customerFilter);
-                    
-                    return matchesDate && matchesCustomer;
-                });
+                const filteredSales = this.getFilteredSales(dateFrom, dateTo, customerFilter);
                 
                 const tableBody = document.getElementById('salesTableBody');
                 if (tableBody) {
@@ -6504,9 +6661,9 @@
                                 <td>${customer.last_purchase ? new Date(customer.last_purchase).toLocaleDateString('bn-BD') : 'N/A'}</td>
                                 <td>
                                     <button class="btn btn-sm btn-info view-customer-details" data-id="${customer.id}">
-                                        <i class="fas fa-chart-bar"></i> বিস্তারিত
+                                        <i class="fas fa-chart-bar"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-success print-report-btn print-customer-report" data-id="${customer.id}" data-name="${customer.name}">
+                                    <button class="btn btn-sm btn-success print-customer-report" data-id="${customer.id}" data-name="${customer.name}">
                                         <i class="fas fa-print"></i>
                                     </button>
                                 </td>
@@ -6562,9 +6719,9 @@
                                 <td>${report.total_purchases}</td>
                                 <td>
                                     <button class="btn btn-sm btn-info view-supplier-details" data-id="${supplier.id}">
-                                        <i class="fas fa-chart-bar"></i> বিস্তারিত
+                                        <i class="fas fa-chart-bar"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-success print-report-btn print-supplier-report" data-id="${supplier.id}" data-name="${supplier.name}">
+                                    <button class="btn btn-sm btn-success print-supplier-report" data-id="${supplier.id}" data-name="${supplier.name}">
                                         <i class="fas fa-print"></i>
                                     </button>
                                 </td>
@@ -6936,15 +7093,18 @@
             
             // গ্রাহক রিপোর্ট প্রিন্ট করার ফাংশন
             printCustomerReport(customerId, customerName) {
-                const customer = this.db.getCustomer(customerId);
-                if (!customer) return;
+                const customer = this.db.getCustomer(parseInt(customerId));
+                if (!customer) {
+                    this.showAlert('গ্রাহক খুঁজে পাওয়া যায়নি', 'danger');
+                    return;
+                }
                 
                 const startDate = document.getElementById('reportStartDate')?.value || '';
                 const endDate = document.getElementById('reportEndDate')?.value || '';
                 
                 const report = startDate && endDate ? 
-                    this.db.getCustomerSalesReport(customerId, startDate, endDate) : 
-                    this.db.getCustomerSalesReport(customerId);
+                    this.db.getCustomerSalesReport(parseInt(customerId), startDate, endDate) : 
+                    this.db.getCustomerSalesReport(parseInt(customerId));
                 
                 // দোকানের তথ্য
                 const storeName = localStorage.getItem('storeName') || 'খান টেলিকম';
@@ -6953,49 +7113,61 @@
                 const storeLogo = localStorage.getItem('storeLogo') || DEFAULT_LOGO;
                 
                 // মাসিক ডেটা
-                const monthKeys = Object.keys(report.sales_by_month).sort().reverse().slice(0, 6);
+                const monthKeys = Object.keys(report.sales_by_month || {}).sort().reverse().slice(0, 6);
                 
                 // সাম্প্রতিক ক্রয়ের HTML তৈরি
                 let recentSalesHtml = '';
-                report.recent_sales.slice(0, 10).forEach(sale => {
-                    recentSalesHtml += `
-                        <tr>
-                            <td>${sale.invoice_no}</td>
-                            <td>${new Date(sale.sale_date).toLocaleDateString('bn-BD')}</td>
-                            <td>${sale.items.map(item => `${item.name} (${item.quantity} ${item.unit})`).join(', ')}</td>
-                            <td class="numeric">${sale.total_amount.toFixed(2)}</td>
-                            <td class="numeric">${sale.advance_paid ? sale.advance_paid.toFixed(2) : '0.00'}</td>
-                            <td class="numeric">${sale.due_amount ? sale.due_amount.toFixed(2) : '0.00'}</td>
-                            <td>${sale.payment_method}</td>
-                        </tr>
-                    `;
-                });
+                if (report.recent_sales && report.recent_sales.length > 0) {
+                    report.recent_sales.slice(0, 10).forEach(sale => {
+                        recentSalesHtml += `
+                            <tr>
+                                <td>${sale.invoice_no}</td>
+                                <td>${new Date(sale.sale_date).toLocaleDateString('bn-BD')}</td>
+                                <td>${sale.items ? sale.items.map(item => `${item.name} (${item.quantity} ${item.unit})`).join(', ') : '-'}</td>
+                                <td class="numeric">${sale.total_amount ? sale.total_amount.toFixed(2) : '0.00'}</td>
+                                <td class="numeric">${sale.advance_paid ? sale.advance_paid.toFixed(2) : '0.00'}</td>
+                                <td class="numeric">${sale.due_amount ? sale.due_amount.toFixed(2) : '0.00'}</td>
+                                <td>${sale.payment_method || '-'}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    recentSalesHtml = '<tr><td colspan="7" class="text-center">কোনো বিক্রয় নেই</td></tr>';
+                }
                 
                 // মাসিক ক্রয়ের HTML
                 let monthlyHtml = '';
-                monthKeys.forEach(key => {
-                    const data = report.sales_by_month[key];
-                    monthlyHtml += `
-                        <tr>
-                            <td>${data.label}</td>
-                            <td class="numeric">${data.total.toFixed(2)}</td>
-                            <td class="numeric">${data.cash.toFixed(2)}</td>
-                            <td class="numeric">${data.credit.toFixed(2)}</td>
-                        </tr>
-                    `;
-                });
+                if (monthKeys.length > 0) {
+                    monthKeys.forEach(key => {
+                        const data = report.sales_by_month[key];
+                        monthlyHtml += `
+                            <tr>
+                                <td>${data.label || key}</td>
+                                <td class="numeric">${data.total ? data.total.toFixed(2) : '0.00'}</td>
+                                <td class="numeric">${data.cash ? data.cash.toFixed(2) : '0.00'}</td>
+                                <td class="numeric">${data.credit ? data.credit.toFixed(2) : '0.00'}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    monthlyHtml = '<tr><td colspan="4" class="text-center">কোনো ডেটা নেই</td></tr>';
+                }
                 
                 // ক্যাটাগরি অনুযায়ী HTML
                 let categoryHtml = '';
-                Object.entries(report.sales_by_category).forEach(([category, amount]) => {
-                    categoryHtml += `
-                        <tr>
-                            <td>${category}</td>
-                            <td class="numeric">${amount.toFixed(2)}</td>
-                            <td class="numeric">${((amount / report.total_amount) * 100).toFixed(1)}%</td>
-                        </tr>
-                    `;
-                });
+                if (report.sales_by_category && Object.keys(report.sales_by_category).length > 0) {
+                    Object.entries(report.sales_by_category).forEach(([category, amount]) => {
+                        categoryHtml += `
+                            <tr>
+                                <td>${category}</td>
+                                <td class="numeric">${amount.toFixed(2)}</td>
+                                <td class="numeric">${report.total_amount > 0 ? ((amount / report.total_amount) * 100).toFixed(1) : 0}%</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    categoryHtml = '<tr><td colspan="3" class="text-center">কোনো ডেটা নেই</td></tr>';
+                }
                 
                 const printWindow = window.open('', '_blank');
                 printWindow.document.write(`
@@ -7003,7 +7175,7 @@
                     <html lang="bn">
                     <head>
                         <meta charset="UTF-8">
-                        <title>${customerName} - গ্রাহক রিপোর্ট</title>
+                        <title>${customer.name} - গ্রাহক রিপোর্ট</title>
                         <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
                         <style>
                             body { 
@@ -7113,30 +7285,30 @@
                         <div class="summary-grid">
                             <div class="summary-item">
                                 <h3>মোট ক্রয়</h3>
-                                <div class="value">${report.total_amount.toFixed(2)} টাকা</div>
+                                <div class="value">${report.total_amount ? report.total_amount.toFixed(2) : '0.00'} টাকা</div>
                             </div>
                             <div class="summary-item">
                                 <h3>নগদ বিক্রয়</h3>
-                                <div class="value">${report.cash_sales.toFixed(2)} টাকা</div>
+                                <div class="value">${report.cash_sales ? report.cash_sales.toFixed(2) : '0.00'} টাকা</div>
                             </div>
                             <div class="summary-item">
                                 <h3>বাকি বিক্রয়</h3>
-                                <div class="value">${report.credit_sales.toFixed(2)} টাকা</div>
+                                <div class="value">${report.credit_sales ? report.credit_sales.toFixed(2) : '0.00'} টাকা</div>
                             </div>
                         </div>
                         
                         <div class="summary-grid">
                             <div class="summary-item">
                                 <h3>মোট জমা</h3>
-                                <div class="value">${customer.total_advance.toFixed(2)} টাকা</div>
+                                <div class="value">${customer.total_advance ? customer.total_advance.toFixed(2) : '0.00'} টাকা</div>
                             </div>
                             <div class="summary-item">
                                 <h3>বর্তমান বাকি</h3>
-                                <div class="value">${report.total_due.toFixed(2)} টাকা</div>
+                                <div class="value">${report.total_due ? report.total_due.toFixed(2) : '0.00'} টাকা</div>
                             </div>
                             <div class="summary-item">
                                 <h3>মোট লেনদেন</h3>
-                                <div class="value">${report.total_sales}টি</div>
+                                <div class="value">${report.total_sales || 0}টি</div>
                             </div>
                         </div>
                         
@@ -7209,17 +7381,20 @@
                 printWindow.document.close();
             }
             
-            // সরবরাহকারী রিপোর্ট প্রিন্ট করার ফাংশন (গ্রাহক রিপোর্টের মতো করে)
+            // সরবরাহকারী রিপোর্ট প্রিন্ট করার ফাংশন
             printSupplierReport(supplierId, supplierName) {
-                const supplier = this.db.getSupplier(supplierId);
-                if (!supplier) return;
+                const supplier = this.db.getSupplier(parseInt(supplierId));
+                if (!supplier) {
+                    this.showAlert('সরবরাহকারী খুঁজে পাওয়া যায়নি', 'danger');
+                    return;
+                }
                 
                 const startDate = document.getElementById('reportStartDate')?.value || '';
                 const endDate = document.getElementById('reportEndDate')?.value || '';
                 
                 const report = startDate && endDate ? 
-                    this.db.getSupplierPurchaseReport(supplierId, startDate, endDate) : 
-                    this.db.getSupplierPurchaseReport(supplierId);
+                    this.db.getSupplierPurchaseReport(parseInt(supplierId), startDate, endDate) : 
+                    this.db.getSupplierPurchaseReport(parseInt(supplierId));
                 
                 // দোকানের তথ্য
                 const storeName = localStorage.getItem('storeName') || 'খান টেলিকম';
@@ -7228,54 +7403,66 @@
                 const storeLogo = localStorage.getItem('storeLogo') || DEFAULT_LOGO;
                 
                 // মাসিক ডেটা
-                const monthKeys = Object.keys(report.purchases_by_month).sort().reverse().slice(0, 6);
+                const monthKeys = Object.keys(report.purchases_by_month || {}).sort().reverse().slice(0, 6);
                 
                 // পণ্য অনুযায়ী HTML
                 let productHtml = '';
-                Object.entries(report.purchases_by_product).forEach(([product, data]) => {
-                    productHtml += `
-                        <tr>
-                            <td>${product}</td>
-                            <td class="numeric">${data.quantity}</td>
-                            <td class="numeric">${data.amount.toFixed(2)} টাকা</td>
-                        </tr>
-                    `;
-                });
+                if (report.purchases_by_product && Object.keys(report.purchases_by_product).length > 0) {
+                    Object.entries(report.purchases_by_product).forEach(([product, data]) => {
+                        productHtml += `
+                            <tr>
+                                <td>${product}</td>
+                                <td class="numeric">${data.quantity || 0}</td>
+                                <td class="numeric">${data.amount ? data.amount.toFixed(2) : '0.00'} টাকা</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    productHtml = '<tr><td colspan="3" class="text-center">কোনো ডেটা নেই</td></tr>';
+                }
                 
                 // মাসিক ক্রয়ের HTML
                 let monthlyHtml = '';
-                monthKeys.forEach(key => {
-                    const data = report.purchases_by_month[key];
-                    monthlyHtml += `
-                        <tr>
-                            <td>${data.label}</td>
-                            <td class="numeric">${data.amount.toFixed(2)} টাকা</td>
-                            <td class="numeric">${data.count}</td>
-                        </tr>
-                    `;
-                });
+                if (monthKeys.length > 0) {
+                    monthKeys.forEach(key => {
+                        const data = report.purchases_by_month[key];
+                        monthlyHtml += `
+                            <tr>
+                                <td>${data.label || key}</td>
+                                <td class="numeric">${data.amount ? data.amount.toFixed(2) : '0.00'} টাকা</td>
+                                <td class="numeric">${data.count || 0}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    monthlyHtml = '<tr><td colspan="3" class="text-center">কোনো ডেটা নেই</td></tr>';
+                }
                 
                 // সাম্প্রতিক ক্রয়ের HTML
                 let recentPurchasesHtml = '';
-                report.recent_purchases.slice(0, 10).forEach(purchase => {
-                    const product = this.db.getProduct(purchase.product_id);
-                    recentPurchasesHtml += `
-                        <tr>
-                            <td>${new Date(purchase.timestamp).toLocaleDateString('bn-BD')}</td>
-                            <td>${product ? product.name : 'Unknown'}</td>
-                            <td class="numeric">${purchase.quantity}</td>
-                            <td class="numeric">${purchase.price.toFixed(2)} টাকা</td>
-                            <td class="numeric">${(purchase.quantity * purchase.price).toFixed(2)} টাকা</td>
-                            <td><small>${purchase.notes || '-'}</small></td>
-                        </tr>
-                    `;
-                });
+                if (report.recent_purchases && report.recent_purchases.length > 0) {
+                    report.recent_purchases.slice(0, 10).forEach(purchase => {
+                        const product = this.db.getProduct(purchase.product_id);
+                        recentPurchasesHtml += `
+                            <tr>
+                                <td>${new Date(purchase.timestamp).toLocaleDateString('bn-BD')}</td>
+                                <td>${product ? product.name : 'Unknown'}</td>
+                                <td class="numeric">${purchase.quantity || 0}</td>
+                                <td class="numeric">${purchase.price ? purchase.price.toFixed(2) : '0.00'} টাকা</td>
+                                <td class="numeric">${(purchase.quantity * purchase.price).toFixed(2)} টাকা</td>
+                                <td><small>${purchase.notes || '-'}</small></td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    recentPurchasesHtml = '<tr><td colspan="6" class="text-center">কোনো ক্রয় নেই</td></tr>';
+                }
                 
                 // পেমেন্ট রেকর্ডের HTML
                 let paymentHtml = '';
-                this.db.getSupplierTransactions()
-                    .filter(t => t.supplier_id === supplierId)
-                    .forEach(transaction => {
+                const payments = this.db.getSupplierTransactions().filter(t => t.supplier_id === parseInt(supplierId));
+                if (payments.length > 0) {
+                    payments.forEach(transaction => {
                         paymentHtml += `
                             <tr>
                                 <td>${new Date(transaction.date).toLocaleDateString('bn-BD')}</td>
@@ -7284,12 +7471,15 @@
                                         ${transaction.type === 'payment' ? 'পেমেন্ট' : 'ক্রয়'}
                                     </span>
                                 </td>
-                                <td class="numeric">${transaction.amount.toFixed(2)} টাকা</td>
-                                <td>${transaction.payment_method}</td>
+                                <td class="numeric">${transaction.amount ? transaction.amount.toFixed(2) : '0.00'} টাকা</td>
+                                <td>${transaction.payment_method || '-'}</td>
                                 <td><small>${transaction.notes || '-'}</small></td>
                             </tr>
                         `;
                     });
+                } else {
+                    paymentHtml = '<tr><td colspan="5" class="text-center">কোনো পেমেন্ট রেকর্ড নেই</td></tr>';
+                }
                 
                 const printWindow = window.open('', '_blank');
                 printWindow.document.write(`
@@ -7297,7 +7487,7 @@
                     <html lang="bn">
                     <head>
                         <meta charset="UTF-8">
-                        <title>${supplierName} - সরবরাহকারী রিপোর্ট</title>
+                        <title>${supplier.name} - সরবরাহকারী রিপোর্ট</title>
                         <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
                         <style>
                             body { 
@@ -7417,38 +7607,38 @@
                         <div class="summary-grid">
                             <div class="summary-item">
                                 <h3>মোট ক্রয়</h3>
-                                <div class="value">${report.total_purchase_amount.toFixed(2)} টাকা</div>
+                                <div class="value">${report.total_purchase_amount ? report.total_purchase_amount.toFixed(2) : '0.00'} টাকা</div>
                             </div>
                             <div class="summary-item">
                                 <h3>মোট পেমেন্ট</h3>
-                                <div class="value">${report.total_payments.toFixed(2)} টাকা</div>
+                                <div class="value">${report.total_payments ? report.total_payments.toFixed(2) : '0.00'} টাকা</div>
                             </div>
                             <div class="summary-item">
                                 <h3>বর্তমান বাকি</h3>
-                                <div class="value">${report.current_due.toFixed(2)} টাকা</div>
+                                <div class="value">${report.current_due ? report.current_due.toFixed(2) : '0.00'} টাকা</div>
                             </div>
                             <div class="summary-item">
                                 <h3>লেনদেন সংখ্যা</h3>
-                                <div class="value">${report.total_purchases}</div>
+                                <div class="value">${report.total_purchases || 0}</div>
                             </div>
                         </div>
                         
                         <div class="summary-grid">
                             <div class="summary-item">
                                 <h3>নগদ ক্রয়</h3>
-                                <div class="value">${report.cash_purchases.toFixed(2)} টাকা</div>
+                                <div class="value">${report.cash_purchases ? report.cash_purchases.toFixed(2) : '0.00'} টাকা</div>
                             </div>
                             <div class="summary-item">
                                 <h3>বাকি ক্রয়</h3>
-                                <div class="value">${report.credit_purchases.toFixed(2)} টাকা</div>
+                                <div class="value">${report.credit_purchases ? report.credit_purchases.toFixed(2) : '0.00'} টাকা</div>
                             </div>
                             <div class="summary-item">
                                 <h3>নগদ হার</h3>
-                                <div class="value">${((report.cash_purchases / report.total_purchase_amount) * 100).toFixed(1)}%</div>
+                                <div class="value">${report.total_purchase_amount > 0 ? ((report.cash_purchases / report.total_purchase_amount) * 100).toFixed(1) : 0}%</div>
                             </div>
                             <div class="summary-item">
                                 <h3>বাকি হার</h3>
-                                <div class="value">${((report.credit_purchases / report.total_purchase_amount) * 100).toFixed(1)}%</div>
+                                <div class="value">${report.total_purchase_amount > 0 ? ((report.credit_purchases / report.total_purchase_amount) * 100).toFixed(1) : 0}%</div>
                             </div>
                         </div>
                         
@@ -7511,7 +7701,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${paymentHtml || '<tr><td colspan="5" class="text-center">কোনো পেমেন্ট রেকর্ড নেই</td></tr>'}
+                                ${paymentHtml}
                             </tbody>
                         </table>
                         
