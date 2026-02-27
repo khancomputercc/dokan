@@ -2066,8 +2066,9 @@
                             <div class="col-md-3 col-lg-2 sidebar p-0">
                                 <div class="p-3">
                                     <h4 class="text-center mb-4">
-                                        <i class="fas fa-store"></i> অন পেজের দোকান
+                                        <i class="fas fa-store"></i> খান টেলিকম
                                     </h4>
+
                                     <div class="text-center mb-4">
                                         <div class="bg-light rounded-circle d-inline-block p-3">
                                             <i class="fas fa-user-circle fa-3x text-primary"></i>
@@ -2122,6 +2123,9 @@
                                     </a>
                                 </nav>
                             </div>
+
+
+                            
                             
                             <!-- মূল কন্টেন্ট -->
                             <div class="col-md-9 col-lg-10 main-content">
@@ -4277,100 +4281,78 @@
                 `;
             }
             
-            renderSettingsView() {
-                if (this.currentUser.role !== 'admin') {
-                    return `<div class="alert alert-danger">এই পৃষ্ঠায় অ্যাক্সেসের অনুমতি নেই</div>`;
-                }
-                
-                return `
-                    <div class="settings-content">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h2>সিস্টেম সেটিংস</h2>
+          // renderSettingsView ফাংশনের ভিতরে আপডেট করুন
+
+renderSettingsView() {
+    if (this.currentUser.role !== 'admin') {
+        return `<div class="alert alert-danger">এই পৃষ্ঠায় অ্যাক্সেসের অনুমতি নেই</div>`;
+    }
+    
+    // লোকালস্টোরেজ থেকে দোকানের তথ্য লোড করুন
+    const storeName = localStorage.getItem('storeName') || 'খান টেলিকম';
+    const storeAddress = localStorage.getItem('storeAddress') || 'মিরপুর, ঢাকা';
+    const storePhone = localStorage.getItem('storePhone') || '০১৭১২৩৪৫৬৭৮';
+    const sellerName = localStorage.getItem('sellerName') || 'মো: রাসেল খান';
+    
+    return `
+        <div class="settings-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>সিস্টেম সেটিংস</h2>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">দোকানের তথ্য</h5>
                         </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">সিস্টেম তথ্য</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label class="form-label">দোকানের নাম</label>
-                                            <input type="text" class="form-control" id="storeName" value="অন পেজের দোকান">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">ঠিকানা</label>
-                                            <textarea class="form-control" id="storeAddress" rows="3">মিরপুর, ঢাকা</textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">ফোন নম্বর</label>
-                                            <input type="text" class="form-control" id="storePhone" value="০১৭১২৩৪৫৬৭৮">
-                                        </div>
-                                        <button class="btn btn-primary" id="updateStoreInfoBtn">আপডেট করুন</button>
-                                    </div>
-                                </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">দোকানের নাম</label>
+                                <input type="text" class="form-control" id="storeName" value="${storeName}">
                             </div>
-                            
-                            <div class="col-md-6 mb-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">ব্যাকআপ ও রিস্টোর</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label class="form-label">ডাটাবেস ব্যাকআপ</label>
-                                            <button class="btn btn-success w-100" id="backupBtn">
-                                                <i class="fas fa-download"></i> ব্যাকআপ ডাউনলোড করুন
-                                            </button>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">ডাটাবেস রিস্টোর</label>
-                                            <input type="file" class="form-control" id="restoreFile" accept=".json">
-                                            <button class="btn btn-warning w-100 mt-2" id="restoreBtn">
-                                                <i class="fas fa-upload"></i> রিস্টোর করুন
-                                            </button>
-                                        </div>
-                                        <div class="alert alert-warning">
-                                            <i class="fas fa-exclamation-triangle"></i> 
-                                            ডাটাবেস রিস্টোর করলে বর্তমান সব ডেটা মুছে যাবে
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label class="form-label">ঠিকানা</label>
+                                <textarea class="form-control" id="storeAddress" rows="2">${storeAddress}</textarea>
                             </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">ডেটা পরিষ্কার করুন</h5>
+                            <div class="mb-3">
+                                <label class="form-label">ফোন নম্বর</label>
+                                <input type="text" class="form-control" id="storePhone" value="${storePhone}">
                             </div>
-                            <div class="card-body">
-                                <div class="alert alert-danger">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    সতর্কতা: এই অপারেশন রিভার্সিবল নয়
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4 mb-2">
-                                        <button class="btn btn-danger w-100" id="clearSalesBtn">
-                                            <i class="fas fa-trash"></i> সব বিক্রয় মুছুন
-                                        </button>
-                                    </div>
-                                    <div class="col-md-4 mb-2">
-                                        <button class="btn btn-danger w-100" id="clearProductsBtn">
-                                            <i class="fas fa-trash"></i> সব পণ্য মুছুন
-                                        </button>
-                                    </div>
-                                    <div class="col-md-4 mb-2">
-                                        <button class="btn btn-danger w-100" id="clearAllBtn">
-                                            <i class="fas fa-bomb"></i> সব ডেটা মুছুন
-                                        </button>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label class="form-label">বিক্রেতার নাম</label>
+                                <input type="text" class="form-control" id="sellerName" value="${sellerName}">
                             </div>
+                            <button class="btn btn-primary" id="updateStoreInfoBtn">আপডেট করুন</button>
                         </div>
                     </div>
-                `;
-            }
+                </div>
+                
+                <!-- বাকি কোড অপরিবর্তিত থাকবে -->
+            </div>
+        </div>
+    `;
+}
+
+// updateStoreInfo ফাংশন আপডেট করুন
+updateStoreInfo() {
+    const storeName = document.getElementById('storeName').value;
+    const storeAddress = document.getElementById('storeAddress').value;
+    const storePhone = document.getElementById('storePhone').value;
+    const sellerName = document.getElementById('sellerName').value;
+    
+    localStorage.setItem('storeName', storeName);
+    localStorage.setItem('storeAddress', storeAddress);
+    localStorage.setItem('storePhone', storePhone);
+    localStorage.setItem('sellerName', sellerName);
+    
+    this.showAlert('দোকানের তথ্য আপডেট করা হয়েছে', 'success');
+}
+
+
+
+
+            
             
             // Setup methods
             setupEventListeners() {
@@ -5637,118 +5619,131 @@
                 });
             }
             
-            // ভিউ মেথডস
-            viewSaleDetails(id) {
-                const sale = this.db.getSale(id);
-                if (!sale) return;
-                
-                let itemsHtml = '';
-                sale.items.forEach((item, index) => {
-                    itemsHtml += `
+            // viewSaleDetails ফাংশন আপডেট করুন
+viewSaleDetails(id) {
+    const sale = this.db.getSale(id);
+    if (!sale) return;
+    
+    // গ্রাহকের সম্পূর্ণ তথ্য পাওয়ার জন্য
+    const customer = sale.customer_id ? this.db.getCustomer(sale.customer_id) : null;
+    
+    let itemsHtml = '';
+    sale.items.forEach((item, index) => {
+        itemsHtml += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${item.name}</td>
+                <td>${item.quantity} ${item.unit}</td>
+                <td>${item.price.toFixed(2)} টাকা</td>
+                <td>${item.total.toFixed(2)} টাকা</td>
+            </tr>
+        `;
+    });
+    
+    const content = `
+        <div class="invoice-container">
+            <div class="invoice-header">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>খান টেলিকম</h3>
+                        <p class="mb-1">এতিমখানা বাজার, মোড়েলগঞ্জ, বাগেরহাট</p>
+                        <p class="mb-1">ফোন: ০১৭১২৩৪৫৬৭৮</p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="invoice-number mb-3">
+                            ইনভয়েস: ${sale.invoice_no}
+                        </div>
+                        <p class="mb-1">তারিখ: ${new Date(sale.sale_date).toLocaleString('bn-BD')}</p>
+                        <p class="mb-1">বিক্রেতা: মো: রাসেল খান</p>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>গ্রাহকের তথ্য</h5>
+                    <p class="mb-1"><strong>নাম:</strong> ${sale.customer_name}</p>
+                    ${customer ? `
+                        <p class="mb-1"><strong>মোবাইল:</strong> ${customer.phone || 'N/A'}</p>
+                        <p class="mb-1"><strong>ঠিকানা:</strong> ${customer.address || 'N/A'}</p>
+                    ` : ''}
+                    <p class="mb-0"><strong>বিক্রয় আইডি:</strong> ${sale.id}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>পেমেন্ট তথ্য</h5>
+                    <p class="mb-1"><strong>পেমেন্ট পদ্ধতি:</strong> ${sale.payment_method}</p>
+                    <p class="mb-1"><strong>স্ট্যাটাস:</strong> 
+                        <span class="badge ${sale.payment_status === 'পরিশোধিত' ? 'bg-success' : 'bg-warning'}">
+                            ${sale.payment_status}
+                        </span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="table-responsive mb-4">
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <td>${index + 1}</td>
-                            <td>${item.name}</td>
-                            <td>${item.quantity} ${item.unit}</td>
-                            <td>${item.price.toFixed(2)} টাকা</td>
-                            <td>${item.total.toFixed(2)} টাকা</td>
+                            <th>#</th>
+                            <th>পণ্য</th>
+                            <th>পরিমাণ</th>
+                            <th>দাম</th>
+                            <th>মোট</th>
                         </tr>
-                    `;
-                });
-                
-                const content = `
-                    <div class="invoice-container">
-                        <div class="invoice-header">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h3>অন পেজের দোকান</h3>
-                                    <p class="mb-1">মিরপুর, ঢাকা</p>
-                                    <p class="mb-1">ফোন: ০১৭১২৩৪৫৬৭৮</p>
-                                </div>
-                                <div class="col-md-6 text-end">
-                                    <div class="invoice-number mb-3">
-                                        ইনভয়েস: ${sale.invoice_no}
-                                    </div>
-                                    <p class="mb-1">তারিখ: ${new Date(sale.sale_date).toLocaleString('bn-BD')}</p>
-                                    <p class="mb-1">বিক্রেতা: ${sale.seller_name}</p>
-                                </div>
+                    </thead>
+                    <tbody>
+                        ${itemsHtml}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="row justify-content-end">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>সর্বমোট:</span>
+                                <span>${sale.total_amount.toFixed(2)} টাকা</span>
                             </div>
-                        </div>
-                        
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <h5>গ্রাহকের তথ্য</h5>
-                                <p class="mb-1"><strong>নাম:</strong> ${sale.customer_name}</p>
-                                <p class="mb-0"><strong>বিক্রয় আইডি:</strong> ${sale.id}</p>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>জমা:</span>
+                                <span>${sale.advance_paid ? sale.advance_paid.toFixed(2) + ' টাকা' : '০.০০ টাকা'}</span>
                             </div>
-                            <div class="col-md-6">
-                                <h5>পেমেন্ট তথ্য</h5>
-                                <p class="mb-1"><strong>পেমেন্ট পদ্ধতি:</strong> ${sale.payment_method}</p>
-                                <p class="mb-1"><strong>স্ট্যাটাস:</strong> 
-                                    <span class="badge ${sale.payment_status === 'পরিশোধিত' ? 'bg-success' : 'bg-warning'}">
-                                        ${sale.payment_status}
-                                    </span>
-                                </p>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <strong>বাকি:</strong>
+                                <strong>${sale.due_amount ? sale.due_amount.toFixed(2) + ' টাকা' : '০.০০ টাকা'}</strong>
                             </div>
-                        </div>
-                        
-                        <div class="table-responsive mb-4">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>পণ্য</th>
-                                        <th>পরিমাণ</th>
-                                        <th>দাম</th>
-                                        <th>মোট</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${itemsHtml}
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div class="row justify-content-end">
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span>সর্বমোট:</span>
-                                            <span>${sale.total_amount.toFixed(2)} টাকা</span>
-                                        </div>
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span>জমা:</span>
-                                            <span>${sale.advance_paid ? sale.advance_paid.toFixed(2) + ' টাকা' : '০.০০ টাকা'}</span>
-                                        </div>
-                                        <hr>
-                                        <div class="d-flex justify-content-between">
-                                            <strong>বাকি:</strong>
-                                            <strong>${sale.due_amount ? sale.due_amount.toFixed(2) + ' টাকা' : '০.০০ টাকা'}</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        ${sale.notes ? `
-                        <div class="mt-4">
-                            <h5>মন্তব্য:</h5>
-                            <p>${sale.notes}</p>
-                        </div>
-                        ` : ''}
-                        
-                        <div class="invoice-footer mt-4">
-                            <p>ধন্যবাদান্তে - অন পেজের দোকান</p>
-                            <p><small>এই রসিদ কম্পিউটার জেনারেটেড</small></p>
                         </div>
                     </div>
-                `;
-                
-                document.getElementById('saleDetailsContent').innerHTML = content;
-                const modal = new bootstrap.Modal(document.getElementById('saleDetailsModal'));
-                modal.show();
-            }
+                </div>
+            </div>
             
+            ${sale.notes ? `
+            <div class="mt-4">
+                <h5>মন্তব্য:</h5>
+                <p>${sale.notes}</p>
+            </div>
+            ` : ''}
+            
+            <div class="invoice-footer mt-4">
+                <p>ধন্যবাদান্তে - খান টেলিকম</p>
+                <p><small>এই রসিদ কম্পিউটার জেনারেটেড</small></p>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('saleDetailsContent').innerHTML = content;
+    const modal = new bootstrap.Modal(document.getElementById('saleDetailsModal'));
+    modal.show();
+}
+
+
+
+
+
+    
             viewCustomerSales(customerId, customerName) {
                 const sales = this.db.getCustomerSales(customerId);
                 
@@ -7067,116 +7062,183 @@
                 });
             }
             
-            // ইউটিলিটি মেথডস
-            printInvoice(saleId) {
-                const sale = this.db.getSale(saleId);
-                if (!sale) return;
-                
-                const printWindow = window.open('', '_blank');
-                printWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html lang="bn">
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>ইনভয়েস - ${sale.invoice_no}</title>
-                        <style>
-                            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; }
-                            .invoice-header { border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
-                            .invoice-number { background: #2c3e50; color: white; padding: 10px 20px; display: inline-block; font-weight: bold; }
-                            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                            th { background-color: #f2f2f2; }
-                            .total-row { font-weight: bold; }
-                            .text-right { text-align: right; }
-                            @media print {
-                                body { padding: 0; }
-                                .no-print { display: none; }
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="invoice-header">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                                <div>
-                                    <h2>অন পেজের দোকান</h2>
-                                    <p>মিরপুর, ঢাকা</p>
-                                    <p>ফোন: ০১৭১২৩৪৫৬৭৮</p>
-                                </div>
-                                <div style="text-align: right;">
-                                    <div class="invoice-number">ইনভয়েস: ${sale.invoice_no}</div>
-                                    <p>তারিখ: ${new Date(sale.sale_date).toLocaleString('bn-BD')}</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <h4>গ্রাহক: ${sale.customer_name}</h4>
-                            <p>বিক্রেতা: ${sale.seller_name}</p>
-                            <p>পেমেন্ট পদ্ধতি: ${sale.payment_method}</p>
-                        </div>
-                        
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>পণ্য</th>
-                                    <th>পরিমাণ</th>
-                                    <th>দাম</th>
-                                    <th>মোট</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${sale.items.map((item, index) => `
-                                    <tr>
-                                        <td>${index + 1}</td>
-                                        <td>${item.name}</td>
-                                        <td>${item.quantity} ${item.unit}</td>
-                                        <td>${item.price.toFixed(2)} টাকা</td>
-                                        <td>${item.total.toFixed(2)} টাকা</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                            <tfoot>
-                                <tr class="total-row">
-                                    <td colspan="4" class="text-right">সর্বমোট:</td>
-                                    <td>${sale.total_amount.toFixed(2)} টাকা</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" class="text-right">জমা:</td>
-                                    <td>${sale.advance_paid ? sale.advance_paid.toFixed(2) : '০.০০'} টাকা</td>
-                                </tr>
-                                <tr class="total-row">
-                                    <td colspan="4" class="text-right">বাকি:</td>
-                                    <td>${sale.due_amount ? sale.due_amount.toFixed(2) : '০.০০'} টাকা</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        
-                        ${sale.notes ? `
-                        <div style="margin-top: 20px;">
-                            <h5>মন্তব্য:</h5>
-                            <p>${sale.notes}</p>
-                        </div>
-                        ` : ''}
-                        
-                        <div style="margin-top: 30px; text-align: center; font-style: italic;">
-                            <p>ধন্যবাদান্তে - অন পেজের দোকান</p>
-                            <p><small>এই রসিদ কম্পিউটার জেনারেটেড</small></p>
-                        </div>
-                        
-                        <div style="margin-top: 20px;" class="no-print">
-                            <button onclick="window.print()" style="padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer;">
-                                প্রিন্ট করুন
-                            </button>
-                            <button onclick="window.close()" style="padding: 10px 20px; background: #dc3545; color: white; border: none; cursor: pointer; margin-left: 10px;">
-                                বন্ধ করুন
-                            </button>
-                        </div>
-                    </body>
-                    </html>
-                `);
-                printWindow.document.close();
-            }
+           // printInvoice ফাংশন আপডেট করুন
+printInvoice(saleId) {
+    const sale = this.db.getSale(saleId);
+    if (!sale) return;
+    
+    // গ্রাহকের সম্পূর্ণ তথ্য পাওয়ার জন্য
+    const customer = sale.customer_id ? this.db.getCustomer(sale.customer_id) : null;
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="bn">
+        <head>
+            <meta charset="UTF-8">
+            <title>ইনভয়েস - ${sale.invoice_no}</title>
+            <style>
+                body { 
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                    padding: 20px;
+                    max-width: 800px;
+                    margin: 0 auto;
+                }
+                .invoice-header { 
+                    border-bottom: 2px solid #000; 
+                    padding-bottom: 20px; 
+                    margin-bottom: 30px; 
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                }
+                .invoice-number { 
+                    background: #2c3e50; 
+                    color: white; 
+                    padding: 10px 20px; 
+                    display: inline-block; 
+                    font-weight: bold;
+                    border-radius: 5px;
+                }
+                table { 
+                    width: 100%; 
+                    border-collapse: collapse; 
+                    margin: 20px 0; 
+                }
+                th, td { 
+                    border: 1px solid #ddd; 
+                    padding: 8px; 
+                    text-align: left; 
+                }
+                th { 
+                    background-color: #f2f2f2; 
+                }
+                .total-row { 
+                    font-weight: bold; 
+                }
+                .text-right { 
+                    text-align: right; 
+                }
+                .customer-info {
+                    background: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 5px;
+                    margin: 20px 0;
+                }
+                .footer {
+                    margin-top: 50px;
+                    text-align: center;
+                    font-style: italic;
+                    border-top: 2px solid #000;
+                    padding-top: 20px;
+                }
+                @media print {
+                    body { padding: 0; }
+                    .no-print { display: none; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="invoice-header">
+                <div>
+                    <h1 style="margin:0; color:#2c3e50;">খান টেলিকম</h1>
+                    <p style="margin:5px 0;">মিরপুর, ঢাকা</p>
+                    <p style="margin:5px 0;">ফোন: ০১৭১২৩৪৫৬৭৮</p>
+                </div>
+                <div style="text-align: right;">
+                    <div class="invoice-number">ইনভয়েস: ${sale.invoice_no}</div>
+                    <p style="margin:10px 0 0;">তারিখ: ${new Date(sale.sale_date).toLocaleString('bn-BD')}</p>
+                </div>
+            </div>
+            
+            <div class="customer-info">
+                <h3 style="margin-top:0;">গ্রাহকের তথ্য</h3>
+                <table style="width:100%; border:none; margin:0;">
+                    <tr>
+                        <td style="border:none; padding:5px 0;"><strong>নাম:</strong> ${sale.customer_name}</td>
+                        <td style="border:none; padding:5px 0;"><strong>মোবাইল:</strong> ${customer ? (customer.phone || 'N/A') : 'N/A'}</td>
+                    </tr>
+                    <tr>
+                        <td style="border:none; padding:5px 0;"><strong>ঠিকানা:</strong> ${customer ? (customer.address || 'N/A') : 'N/A'}</td>
+                        <td style="border:none; padding:5px 0;"><strong>বিক্রেতা:</strong> মো: রাসেল খান</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>পণ্যের বিবরণ</th>
+                        <th>পরিমাণ</th>
+                        <th>একক মূল্য</th>
+                        <th>মোট মূল্য</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${sale.items.map((item, index) => `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.name}</td>
+                            <td>${item.quantity} ${item.unit}</td>
+                            <td>${item.price.toFixed(2)} টাকা</td>
+                            <td>${item.total.toFixed(2)} টাকা</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="4" class="text-right">সর্বমোট:</td>
+                        <td>${sale.total_amount.toFixed(2)} টাকা</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-right">জমা / অগ্রিম:</td>
+                        <td>${sale.advance_paid ? sale.advance_paid.toFixed(2) : '০.০০'} টাকা</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="4" class="text-right">বাকি থাকিল:</td>
+                        <td>${sale.due_amount ? sale.due_amount.toFixed(2) : '০.০০'} টাকা</td>
+                    </tr>
+                </tfoot>
+            </table>
+            
+            ${sale.notes ? `
+            <div style="margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <strong>মন্তব্য:</strong> ${sale.notes}
+            </div>
+            ` : ''}
+            
+            <div class="footer">
+                <p style="font-size: 1.2em; margin-bottom: 5px;">ধন্যবাদান্তে - খান টেলিকম</p>
+                <p style="color: #666; font-size: 0.9em;">এই রসিদ কম্পিউটার জেনারেটেড, স্বাক্ষরের প্রয়োজন নেই</p>
+            </div>
+            
+            <div style="margin-top: 20px; text-align: center;" class="no-print">
+                <button onclick="window.print()" style="padding: 10px 30px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-right: 10px;">
+                    🖨️ প্রিন্ট করুন
+                </button>
+                <button onclick="window.close()" style="padding: 10px 30px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                    ✖️ বন্ধ করুন
+                </button>
+            </div>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
             
             showConfirmation(message, callback) {
                 document.getElementById('confirmationModalBody').textContent = message;
