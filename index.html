@@ -949,7 +949,7 @@
                         {
                             id: 8,
                             name: 'ডাল',
-                            category: 'খাদ্যদ্রব্য',
+                            category: 'খাদ্যদব্য',
                             category_id: 1,
                             price: 120,
                             quantity: 30,
@@ -2249,8 +2249,7 @@
         // অ্যাপ্লিকেশন কম্পোনেন্টস
                     class App {
 
-
-                        // App ক্লাসের শুরুতে (constructor এর আগে) এই ফাংশন যোগ করুন
+            // শক্তিশালী cleanupModals ফাংশন
             cleanupModals() {
                 // সব ব্যাকড্রপ মুছে ফেলুন
                 document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
@@ -2258,6 +2257,7 @@
                 document.body.classList.remove('modal-open');
                 document.body.style.overflow = '';
                 document.body.style.paddingRight = '';
+                document.body.style.marginRight = '';
             }
             constructor() {
                 this.db = new Database();
@@ -2273,7 +2273,7 @@
             }
             
             render() {
-                this.cleanupModals(); // এই লাইনটা যোগ করুন
+                this.cleanupModals(); // রেন্ডারের আগে ক্লিনআপ করুন
                 const appContainer = document.getElementById('app');
                 
                 if (this.currentView === 'login') {
@@ -5204,6 +5204,14 @@
             }
             
             setupModalEventListeners() {
+                // সব মোডালের জন্য hidden ইভেন্ট লিসেনার যোগ করুন
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.addEventListener('hidden.bs.modal', () => {
+                        // মোডাল বন্ধ হওয়ার পর ক্লিনআপ করুন
+                        this.cleanupModals();
+                    });
+                });
+                
                 // পণ্য মোডাল রিসেট
                 const productModal = document.getElementById('productModal');
                 if (productModal) {
@@ -5211,12 +5219,6 @@
                         document.getElementById('productForm').reset();
                         document.getElementById('productId').value = '';
                         document.getElementById('modalTitle').textContent = 'নতুন পণ্য যোগ করুন';
-                         // সব মোডালের জন্য একবারে এই ইভেন্ট যোগ করুন
-                        document.querySelectorAll('.modal').forEach(modal => {
-                            modal.addEventListener('hidden.bs.modal', () => {
-                                setTimeout(() => this.cleanupModals(), 100);
-                            });
-                        });
                     });
                 }
                 
@@ -5302,19 +5304,12 @@
                 const confirmationModal = document.getElementById('confirmationModal');
                 if (confirmationModal) {
                     confirmationModal.addEventListener('hidden.bs.modal', () => {
-                        // ব্যাকড্রপ রিমুভ
-                        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
-                            backdrop.remove();
-                        });
-                        document.body.classList.remove('modal-open');
-                        document.body.style.overflow = '';
-                        document.body.style.paddingRight = '';
-                        
                         // confirmActionBtn এর onclick রিমুভ
                         const confirmBtn = document.getElementById('confirmActionBtn');
                         if (confirmBtn) {
                             confirmBtn.onclick = null;
                         }
+                        // cleanupModals ইতিমধ্যে উপরের সাধারণ ইভেন্ট লিসেনার দ্বারা কল হবে
                     });
                 }
             }
@@ -6192,8 +6187,6 @@
                     
                     // ইভেন্ট লিসেনার রিমুভ করুন
                     newConfirmBtn.removeEventListener('click', onClick);
-                     // এই লাইনটা যোগ করুন
-                    setTimeout(() => this.cleanupModals(), 200);
                 });
                 
                 // মোডাল দেখান
