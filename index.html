@@ -461,11 +461,164 @@
         .print-report-btn:hover {
             background-color: #1e2b37;
         }
+        
+        /* কনফার্মেশন মোডাল */
+        #confirmationModal {
+            z-index: 1060;
+        }
+        
+        #confirmationModal .modal-content {
+            border: none;
+            border-radius: 10px;
+        }
+        
+        #confirmationModal .modal-header {
+            background-color: var(--warning-color);
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        #confirmationModal .modal-footer {
+            border-top: 1px solid #dee2e6;
+        }
+        
+        /* ইউজার মোডাল */
+        #userModal {
+            z-index: 1070;
+        }
+        
+        /* সরবরাহকারী পেমেন্ট মোডাল */
+        #supplierPaymentModal {
+            z-index: 1080;
+        }
+        
+        /* সমস্ত মোডালের জন্য জেড-ইনডেক্স */
+        .modal {
+            z-index: 1055;
+        }
+        
+        .modal-backdrop {
+            z-index: 1050;
+        }
+        
+        .modal-backdrop.show {
+            opacity: 0.5;
+        }
+        
+        /* মোডাল স্ট্যাকিং ঠিক করার জন্য */
+        .modal.show {
+            display: block;
+        }
+        
+        body.modal-open {
+            overflow: hidden;
+            padding-right: 0 !important;
+        }
     </style>
 </head>
 <body>
     <!-- App Container -->
     <div id="app"></div>
+
+    <!-- কনফার্মেশন মোডাল - ফিক্সড ভার্সন -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" 
+         data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">নিশ্চিতকরণ</h5>
+                    <button type="button" class="btn-close btn-close-white" 
+                            data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="confirmationModalBody">
+                    আপনি কি নিশ্চিত?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" 
+                            data-bs-dismiss="modal">বাতিল</button>
+                    <button type="button" class="btn btn-danger" 
+                            id="confirmActionBtn">নিশ্চিত করুন</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ইউজার মোডাল -->
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalTitle">নতুন ব্যবহারকারী যোগ করুন</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <input type="hidden" id="userId">
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">নাম *</label>
+                            <input type="text" class="form-control" id="userName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userUsername" class="form-label">ইউজারনেম *</label>
+                            <input type="text" class="form-control" id="userUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userPassword" class="form-label">পাসওয়ার্ড</label>
+                            <input type="password" class="form-control" id="userPassword">
+                            <small class="text-muted">সম্পাদনার সময় ফাঁকা রাখলে পুরানো পাসওয়ার্ড থাকবে</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userRole" class="form-label">ভূমিকা *</label>
+                            <select class="form-control" id="userRole" required>
+                                <option value="staff">স্টাফ</option>
+                                <option value="admin">অ্যাডমিন</option>
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- স্টক সমন্বয় মোডাল -->
+    <div class="modal fade" id="stockAdjustModal" tabindex="-1" aria-labelledby="stockAdjustModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stockAdjustModalTitle">স্টক ইন/আউট</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="stockAdjustForm">
+                        <input type="hidden" id="adjustProductId">
+                        <input type="hidden" id="adjustType">
+                        <div class="mb-3">
+                            <label for="adjustProductName" class="form-label">পণ্যের নাম</label>
+                            <input type="text" class="form-control" id="adjustProductName" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="adjustQuantity" class="form-label">পরিমাণ *</label>
+                            <input type="number" class="form-control" id="adjustQuantity" step="0.001" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="adjustPrice" class="form-label">দাম *</label>
+                            <input type="number" class="form-control" id="adjustPrice" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="adjustNotes" class="form-label">মন্তব্য</label>
+                            <textarea class="form-control" id="adjustNotes" rows="2"></textarea>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script>
@@ -991,6 +1144,11 @@
                 return users.find(user => user.username === username);
             }
             
+            getUser(id) {
+                const users = this.getUsers();
+                return users.find(user => user.id === id);
+            }
+            
             addUser(user) {
                 const users = this.getUsers();
                 user.id = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
@@ -1004,6 +1162,10 @@
                 const users = this.getUsers();
                 const index = users.findIndex(user => user.id === id);
                 if (index !== -1) {
+                    // পাসওয়ার্ড না দিলে পুরানোটা রাখুন
+                    if (!updatedUser.password) {
+                        delete updatedUser.password;
+                    }
                     users[index] = { ...users[index], ...updatedUser };
                     localStorage.setItem('users', JSON.stringify(users));
                     return users[index];
@@ -2085,7 +2247,18 @@
         }
 
         // অ্যাপ্লিকেশন কম্পোনেন্টস
-        class App {
+                    class App {
+
+
+                        // App ক্লাসের শুরুতে (constructor এর আগে) এই ফাংশন যোগ করুন
+            cleanupModals() {
+                // সব ব্যাকড্রপ মুছে ফেলুন
+                document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+                // body এর ক্লাস ও স্টাইল রিমুভ করুন
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+            }
             constructor() {
                 this.db = new Database();
                 this.currentUser = this.db.getCurrentUser();
@@ -2100,6 +2273,7 @@
             }
             
             render() {
+                this.cleanupModals(); // এই লাইনটা যোগ করুন
                 const appContainer = document.getElementById('app');
                 
                 if (this.currentView === 'login') {
@@ -2155,8 +2329,6 @@
                                         <img src="${storeLogo}" alt="${storeName}" class="store-logo">
                                         <h4 class="text-center mb-0">${storeName}</h4>
                                     </div>
-                                    
-                                   
                                 </div>
                                 
                                 <nav class="nav flex-column">
@@ -2190,7 +2362,7 @@
                                     <a href="#" class="nav-link ${this.currentView === 'customer-supplier-report' ? 'active' : ''}" data-view="customer-supplier-report">
                                         <i class="fas fa-file-invoice"></i> গ্রাহক/সরবরাহকারী রিপোর্ট
                                     </a>
-                                    ${this.currentUser.role === 'admin' ? `
+                                    ${this.currentUser && this.currentUser.role === 'admin' ? `
                                     <a href="#" class="nav-link ${this.currentView === 'users' ? 'active' : ''}" data-view="users">
                                         <i class="fas fa-user-cog"></i> ব্যবহারকারী
                                     </a>
@@ -2694,7 +2866,7 @@
                                                             <td>${transaction.payment_method}</td>
                                                             <td><small>${transaction.notes || '-'}</small></td>
                                                             <td>
-                                                                ${this.currentUser.role === 'admin' ? `
+                                                                ${this.currentUser && this.currentUser.role === 'admin' ? `
                                                                 <button class="btn btn-sm btn-danger delete-supplier-payment" data-id="${transaction.id}">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>
@@ -3155,7 +3327,7 @@
                                                             <button class="btn btn-sm btn-warning stock-out" data-id="${product.id}" data-name="${product.name}">
                                                                 <i class="fas fa-minus-circle"></i>
                                                             </button>
-                                                            ${this.currentUser.role === 'admin' ? `
+                                                            ${this.currentUser && this.currentUser.role === 'admin' ? `
                                                             <button class="btn btn-sm btn-danger delete-product" data-id="${product.id}">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
@@ -3257,7 +3429,7 @@
                                                             <button class="btn btn-sm btn-success print-report-btn print-customer-report" data-id="${customer.id}" data-name="${customer.name}">
                                                                 <i class="fas fa-print"></i>
                                                             </button>
-                                                            ${this.currentUser.role === 'admin' ? `
+                                                            ${this.currentUser && this.currentUser.role === 'admin' ? `
                                                             <button class="btn btn-sm btn-danger delete-customer" data-id="${customer.id}">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
@@ -3360,7 +3532,7 @@
                                                 <button class="btn btn-sm btn-secondary print-supplier-report" data-id="${supplier.id}" data-name="${supplier.name}" title="রিপোর্ট প্রিন্ট">
                                                     <i class="fas fa-print"></i>
                                                 </button>
-                                                ${this.currentUser.role === 'admin' ? `
+                                                ${this.currentUser && this.currentUser.role === 'admin' ? `
                                                 <button class="btn btn-sm btn-danger delete-supplier" data-id="${supplier.id}" title="মুছুন">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
@@ -3406,7 +3578,7 @@
                                                         <button class="btn btn-sm btn-primary edit-category" data-id="${category.id}">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
-                                                        ${categoryProducts.length === 0 && this.currentUser.role === 'admin' ? `
+                                                        ${categoryProducts.length === 0 && this.currentUser && this.currentUser.role === 'admin' ? `
                                                         <button class="btn btn-sm btn-danger delete-category" data-id="${category.id}">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
@@ -3815,7 +3987,7 @@
                                                             <button class="btn btn-sm btn-primary print-invoice" data-id="${sale.id}">
                                                                 <i class="fas fa-print"></i>
                                                             </button>
-                                                            ${this.currentUser.role === 'admin' ? `
+                                                            ${this.currentUser && this.currentUser.role === 'admin' ? `
                                                             <button class="btn btn-sm btn-danger delete-sale" data-id="${sale.id}">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
@@ -3917,7 +4089,7 @@
                                                             <button class="btn btn-sm btn-primary edit-transaction" data-id="${transaction.id}">
                                                                 <i class="fas fa-edit"></i>
                                                             </button>
-                                                            ${this.currentUser.role === 'admin' ? `
+                                                            ${this.currentUser && this.currentUser.role === 'admin' ? `
                                                             <button class="btn btn-sm btn-danger delete-transaction" data-id="${transaction.id}">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
@@ -4370,7 +4542,7 @@
             }
             
             renderUsersView() {
-                if (this.currentUser.role !== 'admin') {
+                if (!this.currentUser || this.currentUser.role !== 'admin') {
                     return `<div class="alert alert-danger">এই পৃষ্ঠায় অ্যাক্সেসের অনুমতি নেই</div>`;
                 }
                 
@@ -4432,7 +4604,7 @@
             }
             
             renderSettingsView() {
-                if (this.currentUser.role !== 'admin') {
+                if (!this.currentUser || this.currentUser.role !== 'admin') {
                     return `<div class="alert alert-danger">এই পৃষ্ঠায় অ্যাক্সেসের অনুমতি নেই</div>`;
                 }
                 
@@ -4526,7 +4698,7 @@
                 `;
             }
             
-            // 🔴 নতুন হেল্পার ফাংশন ১: ফিল্টার করা বিক্রয় পাওয়ার জন্য
+            // হেল্পার ফাংশন: ফিল্টার করা বিক্রয় পাওয়ার জন্য
             getFilteredSales(dateFrom, dateTo, customerId) {
                 const sales = this.db.getSales();
                 
@@ -4539,7 +4711,7 @@
                 });
             }
             
-            // 🔴 নতুন হেল্পার ফাংশন ২: সারাংশ হিসাব করার জন্য
+            // হেল্পার ফাংশন: সারাংশ হিসাব করার জন্য
             calculateSalesSummary(sales) {
                 let totalCash = 0;
                 let totalCredit = 0;
@@ -4556,14 +4728,14 @@
                         totalCredit += sale.total_amount;
                     }
                     
-                    // 20% প্রফিট ধরে (আপনি পরিবর্তন করতে পারেন)
+                    // 20% প্রফিট ধরে
                     totalProfit += sale.total_amount * 0.20;
                 });
                 
                 return { totalCash, totalCredit, totalProfit };
             }
             
-            // 🔴 নতুন হেল্পার ফাংশন ৩: সারাংশ আপডেট করার জন্য
+            // সারাংশ আপডেট করার জন্য
             updateSalesSummary() {
                 const dateFrom = document.getElementById('salesDateFrom')?.value || '';
                 const dateTo = document.getElementById('salesDateTo')?.value || '';
@@ -4588,6 +4760,7 @@
                     if (e.target.id === 'logoutBtn' || e.target.closest('#logoutBtn')) {
                         e.preventDefault();
                         this.logout();
+                        return;
                     }
                     
                     // নেভিগেশন লিঙ্ক
@@ -4596,12 +4769,27 @@
                         const view = e.target.getAttribute('data-view') || 
                                     e.target.closest('[data-view]').getAttribute('data-view');
                         this.navigateTo(view);
+                        return;
                     }
                     
                     // ফ্লোটিং একশন বাটন
                     if (e.target.id === 'floatingActionBtn' || e.target.closest('#floatingActionBtn')) {
                         e.preventDefault();
                         this.handleFloatingAction();
+                        return;
+                    }
+                    
+                    // ইউজার এডিট/ডিলিট - নতুন ইউজার যোগ বাটন
+                    if (e.target.id === 'addUserBtn' || e.target.closest('#addUserBtn')) {
+                        e.preventDefault();
+                        const modal = new bootstrap.Modal(document.getElementById('userModal'));
+                        modal.show();
+                        return;
+                    }
+                    
+                    // কনফার্মেশন মোডালে অ্যাকশন বাটন - এই ইভেন্ট আলাদাভাবে হ্যান্ডেল করা হবে
+                    if (e.target.id === 'confirmActionBtn') {
+                        return;
                     }
                     
                     // এডিট/ডিলিট ইভেন্টস
@@ -4673,7 +4861,9 @@
                     
                     // চার্ট ইনিশিয়ালাইজ
                     if (document.getElementById('stockChart')) {
-                        this.initializeStockChart();
+                        setTimeout(() => {
+                            this.initializeStockChart();
+                        }, 100);
                     }
                 }
             }
@@ -4740,6 +4930,24 @@
                     stockTransactionForm.addEventListener('submit', (e) => {
                         e.preventDefault();
                         this.handleStockTransactionSubmit();
+                    });
+                }
+                
+                // স্টক সমন্বয় ফর্ম
+                const stockAdjustForm = document.getElementById('stockAdjustForm');
+                if (stockAdjustForm) {
+                    stockAdjustForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleStockAdjustSubmit();
+                    });
+                }
+                
+                // ইউজার ফর্ম
+                const userForm = document.getElementById('userForm');
+                if (userForm) {
+                    userForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleUserSubmit();
                     });
                 }
                 
@@ -4849,24 +5057,6 @@
                     });
                 }
                 
-                // স্টক সমন্বয় ফর্ম
-                const stockAdjustForm = document.getElementById('stockAdjustForm');
-                if (stockAdjustForm) {
-                    stockAdjustForm.addEventListener('submit', (e) => {
-                        e.preventDefault();
-                        this.handleStockAdjustSubmit();
-                    });
-                }
-                
-                // ইউজার ফর্ম
-                const userForm = document.getElementById('userForm');
-                if (userForm) {
-                    userForm.addEventListener('submit', (e) => {
-                        e.preventDefault();
-                        this.handleUserSubmit();
-                    });
-                }
-                
                 // ফিল্টার
                 const filterSuppliersBtn = document.getElementById('filterSuppliersBtn');
                 if (filterSuppliersBtn) {
@@ -4878,7 +5068,7 @@
                     filterTransactionsBtn.addEventListener('click', () => this.filterTransactions());
                 }
                 
-                // 🔴 আপডেটেড ফিল্টার বাটন ইভেন্ট
+                // ফিল্টার বাটন ইভেন্ট
                 const filterSalesBtn = document.getElementById('filterSalesBtn');
                 if (filterSalesBtn) {
                     filterSalesBtn.addEventListener('click', () => {
@@ -4892,7 +5082,7 @@
                     searchSupplier.addEventListener('input', () => this.filterSuppliers());
                 }
                 
-                // 🔴 ডেট ইনপুট পরিবর্তন হলে অটো ফিল্টার (ঐচ্ছিক)
+                // ডেট ইনপুট পরিবর্তন হলে অটো ফিল্টার
                 const salesDateFrom = document.getElementById('salesDateFrom');
                 const salesDateTo = document.getElementById('salesDateTo');
                 const filterCustomer = document.getElementById('filterCustomer');
@@ -5011,15 +5201,6 @@
                 if (clearAllBtn) {
                     clearAllBtn.addEventListener('click', () => this.clearAllData());
                 }
-                
-                // ইউজার যোগ
-                const addUserBtn = document.getElementById('addUserBtn');
-                if (addUserBtn) {
-                    addUserBtn.addEventListener('click', () => {
-                        const modal = new bootstrap.Modal(document.getElementById('userModal'));
-                        modal.show();
-                    });
-                }
             }
             
             setupModalEventListeners() {
@@ -5030,6 +5211,12 @@
                         document.getElementById('productForm').reset();
                         document.getElementById('productId').value = '';
                         document.getElementById('modalTitle').textContent = 'নতুন পণ্য যোগ করুন';
+                         // সব মোডালের জন্য একবারে এই ইভেন্ট যোগ করুন
+                        document.querySelectorAll('.modal').forEach(modal => {
+                            modal.addEventListener('hidden.bs.modal', () => {
+                                setTimeout(() => this.cleanupModals(), 100);
+                            });
+                        });
                     });
                 }
                 
@@ -5111,11 +5298,23 @@
                     });
                 }
                 
-                // কনফার্মেশন মোডাল
+                // কনফার্মেশন মোডাল - ফিক্সড
                 const confirmationModal = document.getElementById('confirmationModal');
                 if (confirmationModal) {
                     confirmationModal.addEventListener('hidden.bs.modal', () => {
-                        document.getElementById('confirmActionBtn').onclick = null;
+                        // ব্যাকড্রপ রিমুভ
+                        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                            backdrop.remove();
+                        });
+                        document.body.classList.remove('modal-open');
+                        document.body.style.overflow = '';
+                        document.body.style.paddingRight = '';
+                        
+                        // confirmActionBtn এর onclick রিমুভ
+                        const confirmBtn = document.getElementById('confirmActionBtn');
+                        if (confirmBtn) {
+                            confirmBtn.onclick = null;
+                        }
                     });
                 }
             }
@@ -5182,7 +5381,6 @@
                         userModal.show();
                         break;
                     default:
-                        // ডিফল্ট অ্যাকশন
                         break;
                 }
             }
@@ -5193,7 +5391,7 @@
                 const category = this.db.getCategory(categoryId);
                 const unitId = parseInt(document.getElementById('productUnit').value);
                 const unit = this.db.getUnit(unitId);
-                const supplierId = parseInt(document.getElementById('productSupplier').value);
+                const supplierId = parseInt(document.getElementById('productSupplier').value) || null;
                 const supplier = supplierId ? this.db.getSupplier(supplierId) : null;
                 
                 const productData = {
@@ -5219,7 +5417,7 @@
                 }
                 
                 const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
-                modal.hide();
+                if (modal) modal.hide();
                 
                 this.navigateTo('products');
             }
@@ -5244,7 +5442,7 @@
                 }
                 
                 const modal = bootstrap.Modal.getInstance(document.getElementById('customerModal'));
-                modal.hide();
+                if (modal) modal.hide();
                 
                 this.navigateTo('customers');
             }
@@ -5274,7 +5472,7 @@
                 }
                 
                 const modal = bootstrap.Modal.getInstance(document.getElementById('supplierModal'));
-                modal.hide();
+                if (modal) modal.hide();
                 
                 this.navigateTo('suppliers');
             }
@@ -5295,7 +5493,7 @@
                 }
                 
                 const modal = bootstrap.Modal.getInstance(document.getElementById('categoryModal'));
-                modal.hide();
+                if (modal) modal.hide();
                 
                 this.navigateTo('categories');
             }
@@ -5304,7 +5502,7 @@
                 const transactionId = document.getElementById('transactionId').value;
                 const productId = parseInt(document.getElementById('transactionProduct').value);
                 const product = this.db.getProduct(productId);
-                const supplierId = parseInt(document.getElementById('transactionSupplier').value);
+                const supplierId = parseInt(document.getElementById('transactionSupplier').value) || null;
                 const supplier = supplierId ? this.db.getSupplier(supplierId) : null;
                 
                 const transactionData = {
@@ -5314,7 +5512,7 @@
                     price: parseFloat(document.getElementById('transactionPrice').value),
                     supplier_id: supplierId,
                     supplier_name: supplier ? supplier.name : '',
-                    user_id: this.currentUser.id,
+                    user_id: this.currentUser ? this.currentUser.id : 1,
                     notes: document.getElementById('transactionNotes').value || '',
                     timestamp: document.getElementById('transactionDate').value || new Date().toISOString()
                 };
@@ -5345,7 +5543,7 @@
                 }
                 
                 const modal = bootstrap.Modal.getInstance(document.getElementById('stockTransactionModal'));
-                modal.hide();
+                if (modal) modal.hide();
                 
                 this.navigateTo('stock-transactions');
             }
@@ -5366,7 +5564,7 @@
                 }
                 
                 const modal = bootstrap.Modal.getInstance(document.getElementById('stockAdjustModal'));
-                modal.hide();
+                if (modal) modal.hide();
                 
                 this.navigateTo('products');
             }
@@ -5398,7 +5596,7 @@
                 }
                 
                 const modal = bootstrap.Modal.getInstance(document.getElementById('userModal'));
-                modal.hide();
+                if (modal) modal.hide();
                 
                 this.navigateTo('users');
             }
@@ -5420,7 +5618,7 @@
                     this.db.updateCustomer(customerId, customer);
                     
                     const modal = bootstrap.Modal.getInstance(document.getElementById('customerPaymentModal'));
-                    modal.hide();
+                    if (modal) modal.hide();
                     
                     this.showAlert(`${amount.toFixed(2)} টাকা জমা গ্রহণ করা হয়েছে`, 'success');
                     
@@ -5459,7 +5657,7 @@
                     payment_method: paymentMethod,
                     notes: notes,
                     date: date || new Date().toISOString(),
-                    created_by: this.currentUser.id
+                    created_by: this.currentUser ? this.currentUser.id : 1
                 };
                 
                 this.db.addSupplierTransaction(transaction);
@@ -5476,7 +5674,7 @@
                 this.db.updateSupplier(supplierId, supplier);
                 
                 const modal = bootstrap.Modal.getInstance(document.getElementById('supplierPaymentModal'));
-                modal.hide();
+                if (modal) modal.hide();
                 
                 this.showAlert(`${type === 'payment' ? 'পেমেন্ট' : 'ক্রয়'} রেকর্ড করা হয়েছে`, 'success');
                 
@@ -5516,7 +5714,7 @@
                         price: item.price,
                         total: item.total,
                         unit: item.unit,
-                        category_id: item.category_id || this.db.getProduct(item.product_id)?.category_id
+                        category_id: item.category_id || (this.db.getProduct(item.product_id)?.category_id)
                     })),
                     total_amount: subtotal,
                     advance_paid: additionalAdvance,
@@ -5524,23 +5722,25 @@
                     payment_method: paymentMethod,
                     payment_status: dueAmount > 0 ? 'আংশিক' : 'পরিশোধিত',
                     sale_date: saleDate,
-                    seller_id: this.currentUser.id,
-                    seller_name: this.currentUser.name,
+                    seller_id: this.currentUser ? this.currentUser.id : 1,
+                    seller_name: this.currentUser ? this.currentUser.name : 'Unknown',
                     notes: notes
                 };
                 
                 const sale = this.db.addSale(saleData);
                 
                 // গ্রাহকের অ্যাডভান্স থেকে টাকা কেটে নিন (যদি ব্যবহার করা হয়)
-                if (customer && customerAdvance > 0) {
+                if (customer && customerAdvance > 0 && additionalAdvance > 0) {
                     customer.total_advance = Math.max(0, customer.total_advance - additionalAdvance);
                     this.db.updateCustomer(customer.id, customer);
                 }
                 
                 // বিক্রয় সাফ করুন
                 this.saleItems = [];
-                document.getElementById('saleForm').reset();
-                document.getElementById('saleItemsTable').innerHTML = '';
+                const saleForm = document.getElementById('saleForm');
+                if (saleForm) saleForm.reset();
+                const saleItemsTable = document.getElementById('saleItemsTable');
+                if (saleItemsTable) saleItemsTable.innerHTML = '';
                 this.updateSaleTotal();
                 
                 this.showAlert(`বিক্রয় সম্পন্ন হয়েছে! ইনভয়েস নং: ${sale.invoice_no}`, 'success');
@@ -5616,6 +5816,8 @@
             
             updateSaleItemsTable() {
                 const tableBody = document.getElementById('saleItemsTable');
+                if (!tableBody) return;
+                
                 tableBody.innerHTML = '';
                 
                 this.saleItems.forEach(item => {
@@ -5670,7 +5872,8 @@
             
             updateSaleTotal() {
                 const subtotal = this.saleItems.reduce((sum, item) => sum + item.total, 0);
-                const customerAdvance = parseFloat(document.getElementById('customerAdvanceAmount').textContent) || 0;
+                const customerAdvanceText = document.getElementById('customerAdvanceAmount').textContent || '0';
+                const customerAdvance = parseFloat(customerAdvanceText) || 0;
                 const additionalAdvance = parseFloat(document.getElementById('additionalAdvance').value) || 0;
                 const totalAdvance = customerAdvance + additionalAdvance;
                 
@@ -5800,13 +6003,14 @@
             }
             
             editUser(id) {
-                const user = this.db.getUsers().find(u => u.id === id);
+                const user = this.db.getUser(id);
                 if (!user) return;
                 
                 document.getElementById('userId').value = user.id;
                 document.getElementById('userName').value = user.name;
                 document.getElementById('userUsername').value = user.username;
                 document.getElementById('userRole').value = user.role;
+                document.getElementById('userPassword').value = '';
                 document.getElementById('userPassword').required = false;
                 document.getElementById('userModalTitle').textContent = 'ব্যবহারকারী সম্পাদনা করুন';
                 
@@ -5834,69 +6038,171 @@
                 modal.show();
             }
             
-            // ডিলিট মেথডস
+            // 🔴 ফিক্সড ডিলিট মেথডস - নতুন showConfirmation কল করে
             deleteProduct(id) {
+                console.log('Delete product called with id:', id);
                 this.showConfirmation('আপনি কি নিশ্চিত যে আপনি এই পণ্যটি মুছতে চান?', () => {
-                    this.db.deleteProduct(id);
-                    this.navigateTo('products');
-                    this.showAlert('পণ্যটি মুছে ফেলা হয়েছে', 'success');
+                    console.log('Confirmation callback executed for id:', id);
+                    const result = this.db.deleteProduct(id);
+                    console.log('Delete result:', result);
+                    if (result) {
+                        this.showAlert('পণ্যটি মুছে ফেলা হয়েছে', 'success');
+                        this.navigateTo('products');
+                    } else {
+                        this.showAlert('পণ্যটি মুছে ফেলা সম্ভব হয়নি', 'danger');
+                    }
                 });
             }
             
             deleteCustomer(id) {
+                console.log('Delete customer called with id:', id);
                 this.showConfirmation('আপনি কি নিশ্চিত যে আপনি এই গ্রাহককে মুছতে চান?', () => {
-                    this.db.deleteCustomer(id);
-                    this.navigateTo('customers');
-                    this.showAlert('গ্রাহক মুছে ফেলা হয়েছে', 'success');
+                    console.log('Confirmation callback executed for id:', id);
+                    const result = this.db.deleteCustomer(id);
+                    console.log('Delete result:', result);
+                    if (result) {
+                        this.showAlert('গ্রাহক মুছে ফেলা হয়েছে', 'success');
+                        this.navigateTo('customers');
+                    } else {
+                        this.showAlert('গ্রাহক মুছে ফেলা সম্ভব হয়নি', 'danger');
+                    }
                 });
             }
             
             deleteSupplier(id) {
+                console.log('Delete supplier called with id:', id);
                 this.showConfirmation('আপনি কি নিশ্চিত যে আপনি এই সরবরাহকারীকে মুছতে চান?', () => {
-                    this.db.deleteSupplier(id);
-                    this.navigateTo('suppliers');
-                    this.showAlert('সরবরাহকারী মুছে ফেলা হয়েছে', 'success');
+                    console.log('Confirmation callback executed for id:', id);
+                    const result = this.db.deleteSupplier(id);
+                    console.log('Delete result:', result);
+                    if (result) {
+                        this.showAlert('সরবরাহকারী মুছে ফেলা হয়েছে', 'success');
+                        this.navigateTo('suppliers');
+                    } else {
+                        this.showAlert('সরবরাহকারী মুছে ফেলা সম্ভব হয়নি', 'danger');
+                    }
                 });
             }
             
             deleteCategory(id) {
+                console.log('Delete category called with id:', id);
                 this.showConfirmation('আপনি কি নিশ্চিত যে আপনি এই ক্যাটাগরিটি মুছতে চান?', () => {
-                    this.db.deleteCategory(id);
-                    this.navigateTo('categories');
-                    this.showAlert('ক্যাটাগরি মুছে ফেলা হয়েছে', 'success');
+                    console.log('Confirmation callback executed for id:', id);
+                    const result = this.db.deleteCategory(id);
+                    console.log('Delete result:', result);
+                    if (result) {
+                        this.showAlert('ক্যাটাগরি মুছে ফেলা হয়েছে', 'success');
+                        this.navigateTo('categories');
+                    } else {
+                        this.showAlert('ক্যাটাগরি মুছে ফেলা সম্ভব হয়নি', 'danger');
+                    }
                 });
             }
             
             deleteTransaction(id) {
+                console.log('Delete transaction called with id:', id);
                 this.showConfirmation('আপনি কি নিশ্চিত যে আপনি এই লেনদেনটি মুছতে চান?', () => {
-                    this.db.deleteTransaction(id);
-                    this.navigateTo('stock-transactions');
-                    this.showAlert('লেনদেন মুছে ফেলা হয়েছে', 'success');
+                    console.log('Confirmation callback executed for id:', id);
+                    const result = this.db.deleteTransaction(id);
+                    console.log('Delete result:', result);
+                    if (result) {
+                        this.showAlert('লেনদেন মুছে ফেলা হয়েছে', 'success');
+                        this.navigateTo('stock-transactions');
+                    } else {
+                        this.showAlert('লেনদেন মুছে ফেলা সম্ভব হয়নি', 'danger');
+                    }
                 });
             }
             
             deleteSale(id) {
+                console.log('Delete sale called with id:', id);
                 this.showConfirmation('আপনি কি নিশ্চিত যে আপনি এই বিক্রয়টি মুছতে চান?', () => {
-                    this.db.deleteSale(id);
-                    this.navigateTo('sales');
-                    this.showAlert('বিক্রয় মুছে ফেলা হয়েছে', 'success');
+                    console.log('Confirmation callback executed for id:', id);
+                    const result = this.db.deleteSale(id);
+                    console.log('Delete result:', result);
+                    if (result) {
+                        this.showAlert('বিক্রয় মুছে ফেলা হয়েছে', 'success');
+                        this.navigateTo('sales');
+                    } else {
+                        this.showAlert('বিক্রয় মুছে ফেলা সম্ভব হয়নি', 'danger');
+                    }
                 });
             }
             
             deleteUser(id) {
+                console.log('Delete user called with id:', id);
                 this.showConfirmation('আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে মুছতে চান?', () => {
-                    this.db.deleteUser(id);
-                    this.navigateTo('users');
-                    this.showAlert('ব্যবহারকারী মুছে ফেলা হয়েছে', 'success');
+                    console.log('Confirmation callback executed for id:', id);
+                    const result = this.db.deleteUser(id);
+                    console.log('Delete result:', result);
+                    if (result) {
+                        this.showAlert('ব্যবহারকারী মুছে ফেলা হয়েছে', 'success');
+                        this.navigateTo('users');
+                    } else {
+                        this.showAlert('ব্যবহারকারী মুছে ফেলা সম্ভব হয়নি', 'danger');
+                    }
                 });
             }
             
             deleteSupplierPayment(id) {
+                console.log('Delete supplier payment called with id:', id);
                 this.showConfirmation('আপনি কি নিশ্চিত যে আপনি এই পেমেন্ট রেকর্ডটি মুছতে চান?', () => {
-                    this.db.deleteSupplierTransaction(id);
-                    this.navigateTo('customer-supplier-report');
-                    this.showAlert('পেমেন্ট রেকর্ড মুছে ফেলা হয়েছে', 'success');
+                    console.log('Confirmation callback executed for id:', id);
+                    const result = this.db.deleteSupplierTransaction(id);
+                    console.log('Delete result:', result);
+                    if (result) {
+                        this.showAlert('পেমেন্ট রেকর্ড মুছে ফেলা হয়েছে', 'success');
+                        this.navigateTo('customer-supplier-report');
+                    } else {
+                        this.showAlert('পেমেন্ট রেকর্ড মুছে ফেলা সম্ভব হয়নি', 'danger');
+                    }
                 });
+            }
+            
+            // 🔴 ফিক্সড কনফার্মেশন মেথড
+            showConfirmation(message, callback) {
+                const modalElement = document.getElementById('confirmationModal');
+                const modalBody = document.getElementById('confirmationModalBody');
+                const confirmBtn = document.getElementById('confirmActionBtn');
+                
+                if (!modalElement || !modalBody || !confirmBtn) {
+                    console.error('কনফার্মেশন মোডাল এলিমেন্ট খুঁজে পাওয়া যায়নি');
+                    return;
+                }
+                
+                // মেসেজ সেট করুন
+                modalBody.textContent = message;
+                
+                // পুরানো ক্লোন ইভেন্ট রিমুভ করুন - নতুন ক্লোন তৈরি করে ইভেন্ট লিসেনার প্রতিস্থাপন
+                const newConfirmBtn = confirmBtn.cloneNode(true);
+                confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+                
+                // নতুন ক্লোনে ইভেন্ট লিসেনার যোগ করুন
+                newConfirmBtn.addEventListener('click', function onClick() {
+                    // কলব্যাক কল করুন
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                    
+                    // মোডাল বন্ধ করুন
+                    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    }
+                    
+                    // ইভেন্ট লিসেনার রিমুভ করুন
+                    newConfirmBtn.removeEventListener('click', onClick);
+                     // এই লাইনটা যোগ করুন
+                    setTimeout(() => this.cleanupModals(), 200);
+                });
+                
+                // মোডাল দেখান
+                const modalInstance = new bootstrap.Modal(modalElement, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                
+                modalInstance.show();
             }
             
             // viewSaleDetails ফাংশন
@@ -6485,7 +6791,7 @@
                                         <button class="btn btn-sm btn-secondary print-supplier-report" data-id="${supplier.id}" data-name="${supplier.name}" title="রিপোর্ট প্রিন্ট">
                                             <i class="fas fa-print"></i>
                                         </button>
-                                        ${this.currentUser.role === 'admin' ? `
+                                        ${this.currentUser && this.currentUser.role === 'admin' ? `
                                         <button class="btn btn-sm btn-danger delete-supplier" data-id="${supplier.id}" title="মুছুন">
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -6538,7 +6844,7 @@
                                     <button class="btn btn-sm btn-primary edit-transaction" data-id="${transaction.id}">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    ${this.currentUser.role === 'admin' ? `
+                                    ${this.currentUser && this.currentUser.role === 'admin' ? `
                                     <button class="btn btn-sm btn-danger delete-transaction" data-id="${transaction.id}">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -6550,7 +6856,7 @@
                 }
             }
             
-            // 🔴 আপডেটেড filterSales ফাংশন - একই থাকবে, শুধু নিশ্চিত করুন এটি সঠিকভাবে কাজ করে
+            // filterSales ফাংশন
             filterSales() {
                 const dateFrom = document.getElementById('salesDateFrom')?.value || '';
                 const dateTo = document.getElementById('salesDateTo')?.value || '';
@@ -6592,7 +6898,7 @@
                                     <button class="btn btn-sm btn-primary print-invoice" data-id="${sale.id}">
                                         <i class="fas fa-print"></i>
                                     </button>
-                                    ${this.currentUser.role === 'admin' ? `
+                                    ${this.currentUser && this.currentUser.role === 'admin' ? `
                                     <button class="btn btn-sm btn-danger delete-sale" data-id="${sale.id}">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -6744,7 +7050,7 @@
                     this.db.getCustomerSalesReport(customerId);
                 
                 // মাসিক ডেটা
-                const monthKeys = Object.keys(report.sales_by_month).sort().reverse().slice(0, 6);
+                const monthKeys = Object.keys(report.sales_by_month || {}).sort().reverse().slice(0, 6);
                 
                 const content = `
                     <div>
@@ -6824,7 +7130,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    ${Object.entries(report.sales_by_category).map(([category, amount]) => `
+                                                    ${Object.entries(report.sales_by_category || {}).map(([category, amount]) => `
                                                         <tr>
                                                             <td>${category}</td>
                                                             <td>${amount.toFixed(2)} টাকা</td>
@@ -6908,7 +7214,7 @@
                     this.db.getSupplierPurchaseReport(supplierId);
                 
                 // মাসিক ডেটা
-                const monthKeys = Object.keys(report.purchases_by_month).sort().reverse().slice(0, 6);
+                const monthKeys = Object.keys(report.purchases_by_month || {}).sort().reverse().slice(0, 6);
                 
                 const content = `
                     <div>
@@ -6987,7 +7293,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    ${Object.entries(report.purchases_by_product).map(([product, data]) => `
+                                                    ${Object.entries(report.purchases_by_product || {}).map(([product, data]) => `
                                                         <tr>
                                                             <td>${product}</td>
                                                             <td>${data.quantity}</td>
@@ -7790,7 +8096,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        ${Object.entries(report.customer_wise).map(([customer, data]) => `
+                                        ${Object.entries(report.customer_wise || {}).map(([customer, data]) => `
                                             <tr>
                                                 <td>${customer}</td>
                                                 <td>${data.total.toFixed(2)} টাকা</td>
@@ -7958,7 +8264,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        ${Object.entries(report.customer_wise).sort((a, b) => b[1].total - a[1].total).map(([customer, data]) => `
+                                        ${Object.entries(report.customer_wise || {}).sort((a, b) => b[1].total - a[1].total).map(([customer, data]) => `
                                             <tr>
                                                 <td><strong>${customer}</strong></td>
                                                 <td>${data.count}</td>
@@ -8032,7 +8338,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        ${Object.entries(salesReport.paymentMethods).map(([method, amount]) => `
+                                        ${Object.entries(salesReport.paymentMethods || {}).map(([method, amount]) => `
                                             <tr>
                                                 <td>${method}</td>
                                                 <td>${amount.toFixed(2)} টাকা</td>
@@ -8397,18 +8703,6 @@
                 });
             }
             
-            showConfirmation(message, callback) {
-                document.getElementById('confirmationModalBody').textContent = message;
-                const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-                
-                document.getElementById('confirmActionBtn').onclick = () => {
-                    callback();
-                    modal.hide();
-                };
-                
-                modal.show();
-            }
-            
             showAlert(message, type = 'info') {
                 const alertDiv = document.createElement('div');
                 alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
@@ -8431,6 +8725,11 @@
                 const ctx = document.getElementById('stockChart');
                 if (!ctx) return;
                 
+                // পুরানো চার্ট যদি থাকে তবে মুছুন
+                if (window.stockChart) {
+                    window.stockChart.destroy();
+                }
+                
                 const products = this.db.getProducts();
                 const stockStatus = {
                     পর্যাপ্ত: 0,
@@ -8448,7 +8747,7 @@
                     }
                 });
                 
-                new Chart(ctx, {
+                window.stockChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
                         labels: ['পর্যাপ্ত স্টক', 'নিম্ন স্টক', 'স্টক শেষ'],
