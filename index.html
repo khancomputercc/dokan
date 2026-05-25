@@ -3294,84 +3294,15 @@
                             </div>
                         </div>
                         
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h5 class="card-title mb-0">
-                                            <i class="fas fa-hard-hat"></i> নির্মাণ সামগ্রী নগদ-বাকি সামারি
-                                        </h5>
-                                        <button class="btn btn-sm btn-outline-primary" data-view="reports">
-                                            বিস্তারিত রিপোর্ট
-                                        </button>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-3 mb-3">
-                                                <div class="summary-card cash text-center p-3">
-                                                    <div class="material-icons mb-2">
-                                                        <i class="fas fa-money-bill-wave"></i>
-                                                    </div>
-                                                    <div class="summary-value">${constructionSummary.total_cash.toFixed(2)}</div>
-                                                    <div class="summary-label">মোট নগদ বিক্রয়</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <div class="summary-card credit text-center p-3">
-                                                    <div class="material-icons mb-2">
-                                                        <i class="fas fa-file-invoice-dollar"></i>
-                                                    </div>
-                                                    <div class="summary-value">${constructionSummary.total_credit.toFixed(2)}</div>
-                                                    <div class="summary-label">মোট বাকি বিক্রয়</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <div class="summary-card total text-center p-3">
-                                                    <div class="material-icons mb-2">
-                                                        <i class="fas fa-chart-line"></i>
-                                                    </div>
-                                                    <div class="summary-value">${constructionSummary.total_sales.toFixed(2)}</div>
-                                                    <div class="summary-label">মোট বিক্রয়</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <div class="summary-card rod text-center p-3">
-                                                    <div class="material-icons mb-2">
-                                                        <i class="fas fa-percentage"></i>
-                                                    </div>
-                                                    <div class="summary-value">${constructionSummary.total_sales > 0 ? ((constructionSummary.total_cash / constructionSummary.total_sales) * 100).toFixed(1) : 0}%</div>
-                                                    <div class="summary-label">নগদ বিক্রয় হার</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <h6 class="mt-4 mb-3">ক্যাটাগরি অনুযায়ী বিক্রয়:</h6>
-                                        <div class="row">
-                                            ${Object.entries(constructionSummary.categories).map(([category, data]) => `
-                                                <div class="col-md-6 mb-3">
-                                                    <div class="category-summary ${category === 'রড/লোহা' ? 'rod' : category === 'সিমেন্ট' ? 'cement' : category === 'মোটাবালু' ? 'motabalu' : 'brick'} p-3 rounded">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div>
-                                                                <h6 class="mb-1">${category}</h6>
-                                                                <p class="mb-0">
-                                                                    <span class="badge bg-success">নগদ: ${data.cash.toFixed(2)} টাকা</span>
-                                                                    <span class="badge bg-warning ms-2">বাকি: ${data.credit.toFixed(2)} টাকা</span>
-                                                                </p>
-                                                            </div>
-                                                            <div class="text-end">
-                                                                <h5 class="mb-0">${data.total.toFixed(2)} টাকা</h5>
-                                                                <small class="text-muted">${((data.total / constructionSummary.total_sales) * 100).toFixed(1)}%</small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            `).join('')}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
+                      
+
+
+
+
+
+
+
+
                         <div class="row mb-4">
                             <div class="col-md-2 col-6 mb-3">
                                 <div class="card dashboard-card">
@@ -3382,7 +3313,7 @@
                                                 <h3>${dashboardData.totalProducts}</h3>
                                             </div>
                                             <div class="card-icon text-primary">
-                                                <i class="fas fa-boxes"></i>
+                                                
                                             </div>
                                         </div>
                                     </div>
